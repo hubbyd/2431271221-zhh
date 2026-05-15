@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>山河旅图Pro - 智能旅游社交平台</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2D5A3D;
+            --primary-dark: #1E3D2A;
+            --secondary: #F59E0B;
+            --success: #10B981;
+            --danger: #EF4444;
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --text: #1F2937;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --border: #E5E7EB;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        .container { max-width: 480px; margin: 0 auto; }
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 24px 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .app-title {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .header-actions { display: flex; gap: 12px; }
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
+        .search-bar {
+            background: rgba(255,255,255,0.15);
+            border-radius: var(--radius-lg);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .search-bar input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+        .search-bar input::placeholder { color: rgba(255,255,255,0.7); }
+        .content { padding: 16px; }
+        .page { display: none; animation: fadeIn 0.3s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Auth Styles */
+        .auth-container {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 32px 24px;
+            background: var(--card);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+        }
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .auth-logo-icon { font-size: 64px; margin-bottom: 12px; }
+        .auth-logo-text { font-size: 28px; font-weight: 800; color: var(--primary); }
+        .auth-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: var(--bg);
+            padding: 4px;
+            border-radius: var(--radius-md);
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .auth-tab.active { background: white; color: var(--primary); box-shadow: var(--shadow); }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 500; }
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            transition: all 0.2s;
+            background: var(--bg);
+        }
+        .form-input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(45,90,61,0.1); }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45,90,61,0.3); }
+        .btn:active { transform: translateY(0); }
+        
+        /* Province Tabs */
+        .province-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px;
+            margin-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .province-tabs::-webkit-scrollbar { display: none; }
+        .province-tab {
+            padding: 10px 16px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .province-tab:hover { border-color: var(--primary); color: var(--primary); }
+        .province-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+        
+        /* Cities Grid */
+        .cities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .city-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .city-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        .city-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+        .city-icon { font-size: 48px; margin-bottom: 12px; }
+        .city-name { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .city-province { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+        .city-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .tag {
+            padding: 4px 10px;
+            background: var(--bg);
+            border-radius: 12px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        
+        /* City Detail */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            align-items: flex-end;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-content {
+            background: var(--card);
+            width: 100%;
+            max-height: 95vh;
+            overflow-y: auto;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            padding: 24px;
+            animation: slideUp 0.3s;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .modal-title { font-size: 20px; font-weight: 700; }
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .detail-section { margin-bottom: 24px; }
+        .detail-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .detail-content { color: var(--text-secondary); line-height: 1.8; }
+        .detail-list { list-style: none; }
+        .detail-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .detail-list li:last-child { border-bottom: none; }
+        
+        /* AI Assistant */
+        .ai-assistant {
+            background: linear-gradient(135deg, var(--primary) 0%, #1a4d2e 100%);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .ai-avatar { font-size: 48px; }
+        .ai-info h3 { font-size: 18px; margin-bottom: 4px; }
+        .ai-info p { font-size: 12px; opacity: 0.8; }
+        .ai-input-group { display: flex; gap: 8px; }
+        .ai-input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: var(--radius-lg);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 15px;
+        }
+        .ai-input::placeholder { color: rgba(255,255,255,0.6); }
+        .ai-btn {
+            padding: 14px 24px;
+            background: var(--secondary);
+            border: none;
+            border-radius: var(--radius-lg);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .ai-btn:hover { transform: scale(1.05); }
+        
+        /* Plan Cards */
+        .plan-cards { display: flex; flex-direction: column; gap: 12px; }
+        .plan-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .plan-card:hover { transform: translateX(4px); }
+        
+        /* Social */
+        .post-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .avatar-sm { width: 36px; height: 36px; font-size: 18px; }
+        .user-info { flex: 1; }
+        .user-name { font-weight: 600; font-size: 15px; }
+        .user-bio { font-size: 12px; color: var(--text-muted); }
+        .post-content { color: var(--text); line-height: 1.6; margin-bottom: 12px; }
+        .post-actions {
+            display: flex;
+            gap: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px;
+            background: var(--bg);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .action-btn:hover { background: var(--primary); color: white; }
+        .action-btn.liked { color: var(--danger); }
+        
+        /* Profile */
+        .profile-header {
+            text-align: center;
+            padding: 32px 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            margin: -16px -16px 16px -16px;
+            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+        }
+        .profile-avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin: 0 auto 16px;
+            border: 4px solid rgba(255,255,255,0.3);
+        }
+        .profile-name { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .profile-level {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--secondary);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: white;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        .stat-value { font-size: 24px; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+        
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 16px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 11px;
+            cursor: pointer;
+            padding: 4px 16px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+        .nav-item.active { color: var(--primary); }
+        .nav-item:hover { background: var(--bg); }
+        .nav-icon { font-size: 24px; }
+        
+        /* Loading & Toast */
+        .loading { text-align: center; padding: 40px; color: var(--text-muted); }
+        .toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            z-index: 300;
+            animation: toastIn 0.3s;
+        }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .empty-icon { font-size: 64px; margin-bottom: 16px; }
+        .empty-text { font-size: 16px; }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .quick-action {
+            background: white;
+            padding: 16px 8px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quick-action:hover { transform: translateY(-2px); }
+        .quick-action-icon { font-size: 28px; margin-bottom: 8px; }
+        .quick-action-text { font-size: 11px; color: var(--text-secondary); }
+        
+        /* Recommended Section */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .section-title { font-size: 18px; font-weight: 700; }
+        .section-more { color: var(--primary); font-size: 13px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="header">
+            <div class="container">
+                <div class="header-top">
+                    <div class="app-title">🏔️ 山河旅图</div>
+                    <div class="header-actions">
+                        <button class="icon-btn" onclick="showPage('search')">🔍</button>
+                        <button class="icon-btn" onclick="showPage('profile')" id="userBtn">👤</button>
+                    </div>
+                </div>
+                <div class="search-bar" onclick="showPage('search')">
+                    <span>🔍</span>
+                    <input type="text" placeholder="搜索城市、攻略、驴友..." readonly>
+                </div>
+            </div>
+        </div>
+        
+        <div id="content" class="container"></div>
+        
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="showPage('home')">
+                <span class="nav-icon">🏠</span>
+                <span>首页</span>
+            </button>
+            <button class="nav-item" onclick="showPage('explore')">
+                <span class="nav-icon">🗺️</span>
+                <span>探索</span>
+            </button>
+            <button class="nav-item" onclick="showPage('ai')">
+                <span class="nav-icon">🤖</span>
+                <span>AI助手</span>
+            </button>
+            <button class="nav-item" onclick="showPage('social')">
+                <span class="nav-icon">📱</span>
+                <span>动态</span>
+            </button>
+            <button class="nav-item" onclick="showPage('profile')">
+                <span class="nav-icon">👤</span>
+                <span>我的</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let currentUser = null;
+        let authToken = localStorage.getItem('token');
+        
+        const cities = [
+            { id: 1, name: '西安', province_name: '陕西', highlights: '十三朝古都,不夜城,美食之城', attractions: '兵马俑,大雁塔,城墙,大唐不夜城', food: '肉夹馍、凉皮、泡馍', hotels: '钟楼饭店/美居酒店', bestSeason: '春秋', avgStayDays: 3, hotelDay: 180, mealDay: 100, route: 'Day1:钟楼→鼓楼→回民街\nDay2:兵马俑→华清宫\nDay3:陕博→大雁塔' },
+            { id: 2, name: '宝鸡', province_name: '陕西', highlights: '青铜器之乡,太白山', attractions: '法门寺,太白山,青铜器博物院', food: '岐山臊子面', hotels: '皇冠假日/高新君悦', bestSeason: '夏秋', avgStayDays: 2, hotelDay: 140, mealDay: 75, route: 'Day1:青铜器博物院\nDay2:法门寺→太白山' },
+            { id: 3, name: '兰州', province_name: '甘肃', highlights: '黄河之都,美食之城', attractions: '中山桥,白塔山,甘肃省博', food: '牛肉面,手抓羊肉', hotels: '亚欧国际/宜必思', bestSeason: '夏秋', avgStayDays: 2, hotelDay: 170, mealDay: 85, route: 'Day1:黄河风情线\nDay2:甘肃省博物馆' },
+            { id: 4, name: '敦煌', province_name: '甘肃', highlights: '莫高窟,月牙泉', attractions: '莫高窟,月牙泉,鸣沙山', food: '驴肉黄面,杏皮水', hotels: '敦煌山庄/丝路花雨', bestSeason: '夏秋', avgStayDays: 3, hotelDay: 250, mealDay: 100, route: 'Day1:鸣沙山月牙泉\nDay2:莫高窟\nDay3:雅丹地貌' },
+            { id: 5, name: '银川', province_name: '宁夏', highlights: '塞上湖城,西夏文化', attractions: '西夏陵,西部影城,沙湖', food: '手抓羊肉,羊杂碎', hotels: '国贸中心/西府井', bestSeason: '夏秋', avgStayDays: 2, hotelDay: 170, mealDay: 85, route: 'Day1:西夏陵→西部影城\nDay2:沙湖' },
+            { id: 6, name: '洛阳', province_name: '河南', highlights: '十三朝古都,龙门石窟', attractions: '龙门石窟,白马寺,老君山', food: '洛阳水席,牛肉汤', hotels: '克丽司汀/吾朵', bestSeason: '春秋', avgStayDays: 2, hotelDay: 180, mealDay: 85, route: 'Day1:龙门石窟→白马寺\nDay2:老君山' },
+            { id: 7, name: '成都', province_name: '四川', highlights: '天府之国,美食之都,熊猫', attractions: '熊猫基地,宽窄巷子,锦里', food: '火锅,串串,冒菜', hotels: '尼依格罗/明宇尚雅', bestSeason: '春秋', avgStayDays: 3, hotelDay: 250, mealDay: 120, route: 'Day1:熊猫基地→宽窄巷子\nDay2:锦里→武侯祠' },
+            { id: 8, name: '武汉', province_name: '湖北', highlights: '江城,樱花之都', attractions: '黄鹤楼,东湖,户部巷', food: '热干面,鸭脖,豆皮', hotels: '马哥孛罗/锦江国际', bestSeason: '春', avgStayDays: 2, hotelDay: 220, mealDay: 100, route: 'Day1:黄鹤楼→户部巷\nDay2:东湖' },
+            { id: 9, name: '太原', province_name: '山西', highlights: '龙城,晋商文化', attractions: '晋祠,山西博物院', food: '刀削面,过油肉', hotels: '并州饭店/潞安戴斯', bestSeason: '春秋', avgStayDays: 2, hotelDay: 170, mealDay: 85, route: 'Day1:晋祠→山西博物院' },
+            { id: 10, name: '大同', province_name: '山西', highlights: '云冈石窟,悬空寺', attractions: '云冈石窟,悬空寺,恒山', food: '刀削面,浑源凉粉', hotels: '云冈建国/魏都国际', bestSeason: '夏秋', avgStayDays: 2, hotelDay: 160, mealDay: 80, route: 'Day1:云冈石窟\nDay2:悬空寺→恒山' },
+            { id: 11, name: '平遥', province_name: '山西', highlights: '古城,晋商文化', attractions: '平遥古城,日升昌,县衙', food: '平遥牛肉,碗托', hotels: '平遥会馆/德盛楼', bestSeason: '春秋', avgStayDays: 2, hotelDay: 160, mealDay: 80, route: 'Day1:平遥古城一日游\nDay2:双林寺→镇国寺' },
+            { id: 12, name: '恩施', province_name: '湖北', highlights: '仙居恩施,大峡谷', attractions: '恩施大峡谷,屏山峡谷,腾龙洞', food: '土家油茶,小土豆', hotels: '瑞享国际/轩宇大酒店', bestSeason: '春秋', avgStayDays: 3, hotelDay: 180, mealDay: 85, route: 'Day1:恩施大峡谷\nDay2:腾龙洞' }
+        ];
+        
+        async function api(url, options = {}) {
+            try {
+                const res = await fetch(`${API_BASE}${url}`, {
+                    ...options,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}),
+                        ...options.headers
+                    }
+                });
+                if (!res.ok) {
+                    if (res.status === 401) {
+                        logout();
+                        showToast('请先登录');
+                        return null;
+                    }
+                    throw new Error('请求失败');
+                }
+                return await res.json();
+            } catch (err) {
+                console.error('API Error:', err);
+                showToast('网络请求失败');
+                return null;
+            }
+        }
+        
+        function showToast(msg) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        function showPage(page) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector(`.nav-item:nth-child(${page === 'home' ? 1 : page === 'explore' ? 2 : page === 'ai' ? 3 : page === 'social' ? 4 : 5})`).classList.add('active');
+            
+            if (!authToken && ['profile', 'ai'].includes(page)) {
+                showAuth();
+                return;
+            }
+            
+            const pages = { home: loadHomePage, explore: loadExplorePage, ai: loadAIPage, social: loadSocialPage, profile: loadProfilePage, search: loadSearchPage };
+            if (pages[page]) pages[page]();
+        }
+        
+        function init() {
+            if (authToken) {
+                api('/auth/me').then(user => {
+                    if (user) {
+                        currentUser = user;
+                        loadHomePage();
+                    } else {
+                        logout();
+                    }
+                });
+            } else {
+                loadHomePage();
+            }
+        }
+        
+        function showAuth(tab = 'login') {
+            document.getElementById('content').innerHTML = `
+                <div class="auth-container">
+                    <div class="auth-logo">
+                        <div class="auth-logo-icon">🏔️</div>
+                        <div class="auth-logo-text">山河旅图</div>
+                    </div>
+                    <div class="auth-tabs">
+                        <div class="auth-tab ${tab === 'login' ? 'active' : ''}" onclick="switchAuthTab('login')">登录</div>
+                        <div class="auth-tab ${tab === 'register' ? 'active' : ''}" onclick="switchAuthTab('register')">注册</div>
+                    </div>
+                    <div id="authForm"></div>
+                </div>
+            `;
+            switchAuthTab(tab);
+        }
+        
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const form = document.getElementById('authForm');
+            if (tab === 'login') {
+                form.innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label">用户名</label>
+                        <input type="text" class="form-input" id="loginUsername" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">密码</label>
+                        <input type="password" class="form-input" id="loginPassword" placeholder="请输入密码">
+                    </div>
+                    <button class="btn" onclick="handleLogin()">登录</button>
+                `;
+            } else {
+                form.innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label">用户名</label>
+                        <input type="text" class="form-input" id="regUsername" placeholder="设置用户名">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">密码</label>
+                        <input type="password" class="form-input" id="regPassword" placeholder="设置密码">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">昵称</label>
+                        <input type="text" class="form-input" id="regNickname" placeholder="设置昵称">
+                    </div>
+                    <button class="btn" onclick="handleRegister()">注册</button>
+                `;
+            }
+        }
+        
+        async function handleLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            if (!username || !password) { showToast('请填写完整信息'); return; }
+            
+            const res = await api('/auth/login', {
+                method: 'POST',
+                body: JSON.stringify({ username, password })
+            });
+            
+            if (res && res.success) {
+                authToken = res.token;
+                currentUser = res.user;
+                localStorage.setItem('token', authToken);
+                showToast('登录成功');
+                init();
+            }
+        }
+        
+        async function handleRegister() {
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const nickname = document.getElementById('regNickname').value.trim() || '旅行者' + Math.floor(Math.random() * 1000);
+            
+            if (!username || !password) { showToast('请填写完整信息'); return; }
+            
+            const res = await api('/auth/register', {
+                method: 'POST',
+                body: JSON.stringify({ username, password, nickname })
+            });
+            
+            if (res && res.success) {
+                authToken = res.token;
+                currentUser = res.user;
+                localStorage.setItem('token', authToken);
+                showToast('注册成功');
+                init();
+            }
+        }
+        
+        function logout() {
+            authToken = null;
+            currentUser = null;
+            localStorage.removeItem('token');
+            showToast('已退出登录');
+            init();
+        }
+        
+        function loadHomePage() {
+            document.getElementById('content').innerHTML = `
+                <div class="page active" style="padding:16px;">
+                    <div class="section-header">
+                        <div class="section-title">🎯 快捷功能</div>
+                    </div>
+                    <div class="quick-actions">
+                        <div class="quick-action" onclick="showPage('ai')">
+                            <div class="quick-action-icon">🤖</div>
+                            <div class="quick-action-text">AI规划</div>
+                        </div>
+                        <div class="quick-action" onclick="showPage('explore')">
+                            <div class="quick-action-icon">🗺️</div>
+                            <div class="quick-action-text">探索城市</div>
+                        </div>
+                        <div class="quick-action" onclick="showPage('social')">
+                            <div class="quick-action-icon">📱</div>
+                            <div class="quick-action-text">旅行动态</div>
+                        </div>
+                        <div class="quick-action" onclick="showPage('profile')">
+                            <div class="quick-action-icon">👤</div>
+                            <div class="quick-action-text">我的主页</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-header">
+                        <div class="section-title">🏆 热门城市</div>
+                        <div class="section-more" onclick="showPage('explore')">查看全部 →</div>
+                    </div>
+                    <div class="cities-grid">
+                        ${cities.slice(0, 4).map(c => `
+                            <div class="city-card" onclick="showCityDetail(${c.id})">
+                                <div class="city-icon">${getCityIcon(c.name)}</div>
+                                <div class="city-name">${c.name}</div>
+                                <div class="city-province">${c.province_name}</div>
+                                <div class="city-tags">
+                                    ${c.highlights.split(',').slice(0, 2).map(h => `<span class="tag">${h}</span>`).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="section-header" style="margin-top:24px;">
+                        <div class="section-title">💡 AI助手</div>
+                    </div>
+                    <div class="ai-assistant">
+                        <div class="ai-header">
+                            <div class="ai-avatar">🤖</div>
+                            <div class="ai-info">
+                                <h3>智能旅行规划</h3>
+                                <p>输入城市名，一键生成专属攻略</p>
+                            </div>
+                        </div>
+                        <div class="ai-input-group">
+                            <input type="text" class="ai-input" id="aiQuickInput" placeholder="例如：去成都玩3天">
+                            <button class="ai-btn" onclick="quickGeneratePlan()">生成</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getCityIcon(cityName) {
+            const icons = { '西安': '🏯', '宝鸡': '⛰️', '兰州': '🌉', '敦煌': '🏜️', '银川': '🏜️', '洛阳': '🏛️', '成都': '🐼', '武汉': '🏯', '太原': '⛩️', '大同': '🏔️', '平遥': '🏮', '恩施': '🌿' };
+            return icons[cityName] || '🏙️';
+        }
+        
+        function quickGeneratePlan() {
+            const input = document.getElementById('aiQuickInput').value.trim();
+            if (!input) { showToast('请输入目的地'); return; }
+            showPage('ai');
+            setTimeout(() => {
+                document.getElementById('aiInput').value = input;
+                generatePlan();
+            }, 300);
+        }
+        
+        function loadExplorePage(provinceFilter = null) {
+            const filteredCities = provinceFilter ? cities.filter(c => c.province_name === provinceFilter) : cities;
+            
+            document.getElementById('content').innerHTML = `
+                <div class="page active" style="padding:16px;">
+                    <div class="section-title" style="margin-bottom:16px;">🗺️ 城市探索</div>
+                    <div class="province-tabs">
+                        <button class="province-tab ${!provinceFilter ? 'active' : ''}" onclick="loadExplorePage(null)">全部</button>
+                        <button class="province-tab ${provinceFilter === '陕西' ? 'active' : ''}" onclick="loadExplorePage('陕西')">陕西</button>
+                        <button class="province-tab ${provinceFilter === '甘肃' ? 'active' : ''}" onclick="loadExplorePage('甘肃')">甘肃</button>
+                        <button class="province-tab ${provinceFilter === '宁夏' ? 'active' : ''}" onclick="loadExplorePage('宁夏')">宁夏</button>
+                        <button class="province-tab ${provinceFilter === '山西' ? 'active' : ''}" onclick="loadExplorePage('山西')">山西</button>
+                        <button class="province-tab ${provinceFilter === '河南' ? 'active' : ''}" onclick="loadExplorePage('河南')">河南</button>
+                        <button class="province-tab ${provinceFilter === '湖北' ? 'active' : ''}" onclick="loadExplorePage('湖北')">湖北</button>
+                        <button class="province-tab ${provinceFilter === '四川' ? 'active' : ''}" onclick="loadExplorePage('四川')">四川</button>
+                    </div>
+                    <div class="cities-grid">
+                        ${filteredCities.map(c => `
+                            <div class="city-card" onclick="showCityDetail(${c.id})">
+                                <div class="city-icon">${getCityIcon(c.name)}</div>
+                                <div class="city-name">${c.name}</div>
+                                <div class="city-province">${c.province_name}</div>
+                                <div class="city-tags">
+                                    ${c.highlights.split(',').slice(0, 2).map(h => `<span class="tag">${h}</span>`).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showCityDetail(cityId) {
+            const city = cities.find(c => c.id === cityId);
+            if (!city) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay show';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">${getCityIcon(city.name)} ${city.name}</div>
+                        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">✨ 城市亮点</div>
+                        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                            ${city.highlights.split(',').map(h => `<span class="tag">${h}</span>`).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">📌 必游景点</div>
+                        <ul class="detail-list">
+                            ${city.attractions.split(',').map(a => `<li>📍 ${a}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">🍜 特色美食</div>
+                        <ul class="detail-list">
+                            ${city.food.split('、').map(f => `<li>🍽️ ${f}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">🗺️ 推荐路线</div>
+                        <div class="detail-content" style="background:var(--bg);padding:16px;border-radius:var(--radius-md);white-space:pre-line;">${city.route}</div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="detail-title">💰 预算参考（${city.avgStayDays}天）</div>
+                        <ul class="detail-list">
+                            <li>🏨 住宿：¥${city.hotelDay * city.avgStayDays}</li>
+                            <li>🍜 餐饮：¥${city.mealDay * city.avgStayDays * 3}</li>
+                            <li>📊 建议游玩：${city.avgStayDays}天</li>
+                            <li>🌤️ 最佳季节：${city.bestSeason}</li>
+                        </ul>
+                    </div>
+                    
+                    <button class="btn" onclick="generatePlanForCity('${city.name}')" style="margin-top:16px;">🤖 AI生成专属计划</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function generatePlanForCity(cityName) {
+            document.querySelector('.modal-overlay.show')?.remove();
+            showPage('ai');
+            setTimeout(() => {
+                document.getElementById('aiInput').value = `去${cityName}玩`;
+                generatePlan();
+            }, 300);
+        }
+        
+        function loadAIPage() {
+            document.getElementById('content').innerHTML = `
+                <div class="page active" style="padding:16px;">
+                    <div class="section-title" style="margin-bottom:16px;">🤖 AI旅行助手</div>
+                    
+                    <div class="ai-assistant">
+                        <div class="ai-header">
+                            <div class="ai-avatar">🤖</div>
+                            <div class="ai-info">
+                                <h3>智能旅行规划助手</h3>
+                                <p>24小时在线 · 一键生成专属攻略</p>
+                            </div>
+                        </div>
+                        <div style="margin-top:16px;font-size:13px;opacity:0.9;">
+                            🚀 告诉我想去的城市和天数，我将为您生成：<br>
+                            📍 详细行程安排<br>
+                            🏨 优质酒店推荐<br>
+                            🍜 特色美食攻略<br>
+                            💰 精准预算清单
+                        </div>
+                        <div class="ai-input-group" style="margin-top:16px;">
+                            <input type="text" class="ai-input" id="aiInput" placeholder="例如：去成都玩3天">
+                            <button class="ai-btn" onclick="generatePlan()">✨ 生成</button>
+                        </div>
+                    </div>
+                    
+                    <div id="planResults">
+                        <div class="empty-state">
+                            <div class="empty-icon">🗺️</div>
+                            <div class="empty-text">输入目的地，开启智能规划之旅</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function generatePlan() {
+            const input = document.getElementById('aiInput').value.trim();
+            if (!input) { showToast('请输入目的地'); return; }
+            
+            const match = input.match(/(?:去|到|)?([^\s\d]+?)(?:玩|待|)?(\d+)?天?/);
+            const cityName = match ? match[1] : input.replace(/\d+天/g, '').trim();
+            const days = match && match[2] ? parseInt(match[2]) : 2;
+            
+            const city = cities.find(c => c.name.includes(cityName) || cityName.includes(c.name));
+            if (!city) {
+                showToast('未找到该城市，请尝试其他城市');
+                return;
+            }
+            
+            showToast('正在生成专属计划...');
+            
+            const plans = JSON.parse(localStorage.getItem('aiPlans') || '[]');
+            const plan = {
+                id: Date.now(),
+                city: city.name,
+                days: days,
+                cityData: city,
+                createdAt: new Date().toISOString()
+            };
+            plans.unshift(plan);
+            localStorage.setItem('aiPlans', JSON.stringify(plans.slice(0, 20)));
+            
+            displayPlan(plan);
+            showToast('计划生成成功！');
+        }
+        
+        function displayPlan(plan) {
+            const city = plan.cityData;
+            document.getElementById('planResults').innerHTML = `
+                <div class="plan-cards">
+                    <div class="plan-card" style="border-left:4px solid var(--primary);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                            <div style="font-size:20px;font-weight:700;">${getCityIcon(city.name)} ${city.name}</div>
+                            <div class="tag">${plan.days}天行程</div>
+                        </div>
+                        
+                        <div class="detail-section" style="margin-top:16px;">
+                            <div class="detail-title">📅 行程安排</div>
+                            <div style="background:var(--bg);padding:16px;border-radius:var(--radius-md);white-space:pre-line;">${city.route}</div>
+                        </div>
+                        
+                        <div class="detail-section" style="margin-top:16px;">
+                            <div class="detail-title">🏨 住宿建议</div>
+                            <ul class="detail-list">
+                                ${city.hotels.split('/').map(h => `<li>🏨 ${h}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section" style="margin-top:16px;">
+                            <div class="detail-title">🍜 美食推荐</div>
+                            <ul class="detail-list">
+                                ${city.food.split('、').map(f => `<li>🍽️ ${f}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section" style="margin-top:16px;">
+                            <div class="detail-title">💰 预算清单（${plan.days}天）</div>
+                            <ul class="detail-list">
+                                <li>🏨 住宿费：¥${city.hotelDay * plan.days}</li>
+                                <li>🍜 餐饮费：¥${city.mealDay * plan.days * 3}</li>
+                                <li>🎫 门票预算：¥${Math.floor(city.hotelDay * 0.5) * plan.days}</li>
+                                <li style="font-weight:700;color:var(--primary);">💵 合计约：¥${(city.hotelDay + city.mealDay * 3) * plan.days + Math.floor(city.hotelDay * 0.5) * plan.days}</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="detail-section" style="margin-top:16px;">
+                            <div class="detail-title">💡 温馨提示</div>
+                            <ul class="detail-list">
+                                <li>🌤️ 最佳游玩季节：${city.bestSeason}</li>
+                                <li>⏰ 建议游玩时长：${city.avgStayDays}天</li>
+                                <li>📸 必去景点：${city.attractions.split(',')[0]}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function loadSocialPage() {
+            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            
+            document.getElementById('content').innerHTML = `
+                <div class="page active" style="padding:16px;">
+                    <div class="section-header">
+                        <div class="section-title">📱 旅行动态</div>
+                        <button class="btn" style="width:auto;padding:8px 16px;font-size:13px;" onclick="showCreatePost()">发布</button>
+                    </div>
+                    ${posts.length > 0 ? posts.map(p => `
+                        <div class="post-card">
+                            <div class="post-header">
+                                <div class="avatar">${p.avatar || '🧳'}</div>
+                                <div class="user-info">
+                                    <div class="user-name">${p.nickname || '匿名用户'}</div>
+                                    <div style="font-size:11px;color:var(--text-muted);">${formatTime(p.createdAt)}</div>
+                                </div>
+                            </div>
+                            <div class="post-content">${p.content}</div>
+                            <div class="post-actions">
+                                <button class="action-btn ${p.liked ? 'liked' : ''}" onclick="toggleLike(${p.id})">${p.liked ? '❤️' : '🤍'} ${p.likes || 0}</button>
+                                <button class="action-btn" onclick="showComments(${p.id})">💬 ${p.comments?.length || 0}</button>
+                                <button class="action-btn" onclick="sharePost('${p.nickname}')">🔗 分享</button>
+                            </div>
+                        </div>
+                    `).join('') : `
+                        <div class="empty-state">
+                            <div class="empty-icon">📱</div>
+                            <div class="empty-text">暂无动态，快来发布第一条吧！</div>
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+        
+        function showCreatePost() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay show';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">📝 发布动态</div>
+                        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
+                    </div>
+                    <textarea class="form-input" id="postContent" rows="5" placeholder="分享你的旅行故事..." style="resize:none;margin-bottom:16px;"></textarea>
+                    <button class="btn" onclick="createPost()">发布</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function createPost() {
+            const content = document.getElementById('postContent').value.trim();
+            if (!content) { showToast('请输入内容'); return; }
+            
+            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            posts.unshift({
+                id: Date.now(),
+                content,
+                nickname: currentUser?.nickname || '旅行者',
+                avatar: currentUser?.avatar || '🧳',
+                createdAt: new Date().toISOString(),
+                likes: 0,
+                comments: []
+            });
+            localStorage.setItem('posts', JSON.stringify(posts));
+            
+            document.querySelector('.modal-overlay.show')?.remove();
+            showToast('发布成功');
+            loadSocialPage();
+        }
+        
+        function toggleLike(postId) {
+            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.liked = !post.liked;
+                post.likes = (post.likes || 0) + (post.liked ? 1 : -1);
+                localStorage.setItem('posts', JSON.stringify(posts));
+                loadSocialPage();
+            }
+        }
+        
+        function sharePost(nickname) {
+            const text = `${nickname}的旅行分享 - 山河旅图Pro`;
+            if (navigator.share) {
+                navigator.share({ title: '山河旅图', text });
+            } else {
+                navigator.clipboard.writeText(text);
+                showToast('已复制到剪贴板');
+            }
+        }
+        
+        function loadProfilePage() {
+            if (!currentUser) {
+                showAuth('login');
+                return;
+            }
+            
+            document.getElementById('content').innerHTML = `
+                <div class="page active">
+                    <div class="profile-header">
+                        <div class="profile-avatar">${currentUser.avatar || '🧳'}</div>
+                        <div class="profile-name">${currentUser.nickname || '旅行者'}</div>
+                        <div class="profile-level">Lv.${currentUser.level || 1}</div>
+                    </div>
+                    
+                    <div style="padding:0 16px 16px;">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value">${currentUser.experience || 0}</div>
+                                <div class="stat-label">经验值</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${JSON.parse(localStorage.getItem('aiPlans') || '[]').length}</div>
+                                <div class="stat-label">旅行计划</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${JSON.parse(localStorage.getItem('posts') || '[]').length}</div>
+                                <div class="stat-label">发布动态</div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-title" style="margin:24px 0 16px;">📋 我的旅行计划</div>
+                        ${loadMyPlans()}
+                        
+                        <button class="btn" onclick="logout()" style="margin-top:24px;background:var(--danger);">退出登录</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function loadMyPlans() {
+            const plans = JSON.parse(localStorage.getItem('aiPlans') || '[]');
+            if (plans.length === 0) {
+                return '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">暂无旅行计划</div></div>';
+            }
+            
+            return plans.slice(0, 5).map(p => `
+                <div class="plan-card" onclick="displayPlan(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div>
+                            <div style="font-weight:600;">${getCityIcon(p.city)} ${p.city}</div>
+                            <div style="font-size:12px;color:var(--text-muted);">${p.days}天行程 · ${formatTime(p.createdAt)}</div>
+                        </div>
+                        <div style="color:var(--primary);">查看 →</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function loadSearchPage() {
+            document.getElementById('content').innerHTML = `
+                <div class="page active" style="padding:16px;">
+                    <input type="text" class="form-input" id="searchInput" placeholder="搜索城市、攻略..." autofocus style="margin-bottom:16px;" oninput="handleSearch(this.value)">
+                    <div id="searchResults"></div>
+                </div>
+            `;
+            document.getElementById('searchInput').focus();
+        }
+        
+        function handleSearch(q) {
+            if (!q) {
+                document.getElementById('searchResults').innerHTML = '';
+                return;
+            }
+            
+            const results = cities.filter(c => 
+                c.name.includes(q) || 
+                c.province_name.includes(q) || 
+                c.highlights.includes(q)
+            );
+            
+            document.getElementById('searchResults').innerHTML = results.length > 0 ?
+                `<div class="cities-grid">${results.map(c => `
+                    <div class="city-card" onclick="showCityDetail(${c.id})">
+                        <div class="city-icon">${getCityIcon(c.name)}</div>
+                        <div class="city-name">${c.name}</div>
+                        <div class="city-province">${c.province_name}</div>
+                    </div>
+                `).join('')}</div>` :
+                '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">未找到结果</div></div>';
+        }
+        
+        function formatTime(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+            if (diff < 60000) return '刚刚';
+            if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
+            if (diff < 604800000) return Math.floor(diff / 86400000) + '天前';
+            return date.toLocaleDateString('zh-CN');
+        }
+        
+        init();
+    </script>
+</body>
+</html>

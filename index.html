@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2d5a3d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>山河旅图 · 全域旅游攻略</title>
+    <style>
+        :root {
+            --primary: #2d5a3d;
+            --primary-light: #3d7a52;
+            --primary-dark: #1f4332;
+            --secondary: #e67e22;
+            --secondary-light: #f39c12;
+            --accent: #3498db;
+            --bg: #f5f7fa;
+            --card: #ffffff;
+            --text: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --border: #e8ece8;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: var(--bg);
+            position: relative;
+            padding-bottom: 80px;
+        }
+
+        .status-bar {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .status-time { font-weight: 600; }
+        .status-icons { display: flex; gap: 4px; }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
+        }
+
+        .header-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.05); }
+        .header-btn:active { transform: scale(0.95); }
+
+        .search-bar {
+            background: rgba(255,255,255,0.15);
+            border-radius: var(--radius-xl);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .search-bar:hover { background: rgba(255,255,255,0.2); }
+
+        .search-icon { font-size: 18px; opacity: 0.8; }
+        .search-text { font-size: 14px; opacity: 0.8; flex: 1; }
+
+        .page {
+            display: none;
+            padding: 16px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page.active { display: block; }
+
+        .hero-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            color: white;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            font-size: 120px;
+            opacity: 0.08;
+            right: -20px;
+            top: -20px;
+        }
+
+        .hero-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255,255,255,0.12);
+            padding: 10px 8px;
+            border-radius: var(--radius-md);
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-more {
+            font-size: 13px;
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .feature-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .feature-card:active { transform: scale(0.98); }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .feature-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .feature-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: all 0.25s ease;
+        }
+
+        .card:hover { box-shadow: var(--shadow-md); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-badge {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: rgba(45,90,61,0.1);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .province-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 4px;
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .province-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            color: var(--text-secondary);
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+
+        .province-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(45,90,61,0.3);
+        }
+
+        .city-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .city-favorite {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.25s ease;
+        }
+
+        .city-favorite:hover { transform: scale(1.2); }
+        .city-favorite.active { animation: heartBeat 0.5s ease; }
+        @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+
+        .city-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-right: 40px;
+        }
+
+        .city-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .city-province {
+            background: linear-gradient(135deg, rgba(230,126,34,0.1) 0%, rgba(230,126,34,0.05) 100%);
+            color: var(--secondary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .city-highlights {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .highlight-tag {
+            background: linear-gradient(135deg, rgba(45,90,61,0.1) 0%, rgba(45,90,61,0.05) 100%);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .city-attractions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .attraction-tag {
+            background: var(--bg);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .city-food {
+            font-size: 13px;
+            color: var(--secondary);
+            margin-bottom: 14px;
+        }
+
+        .budget-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            background: var(--bg);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            margin-bottom: 14px;
+        }
+
+        .budget-item {
+            text-align: center;
+            padding: 8px;
+            background: var(--card);
+            border-radius: var(--radius-sm);
+        }
+
+        .budget-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .budget-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .calc-btn {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 24px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(230,126,34,0.3);
+            margin-bottom: 10px;
+        }
+
+        .calc-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(230,126,34,0.4); }
+        .calc-btn:active { transform: scale(0.98); }
+
+        .result-box {
+            background: linear-gradient(135deg, rgba(45,90,61,0.1) 0%, rgba(45,90,61,0.05) 100%);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            margin-top: 10px;
+            font-size: 13px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .result-box.show { display: block; }
+        .result-total { font-weight: 700; color: var(--primary); font-size: 16px; }
+
+        .route-box {
+            background: var(--bg);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            margin-top: 14px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .route-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .summary-bar {
+            background: linear-gradient(135deg, #fffef8 0%, #fff9f0 100%);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .summary-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .summary-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .route-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+        .route-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .route-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .route-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .route-duration {
+            background: linear-gradient(135deg, rgba(230,126,34,0.1) 0%, rgba(230,126,34,0.05) 100%);
+            color: var(--secondary);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .route-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .budget-summary {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .budget-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .budget-row:last-child { border-bottom: none; }
+        .budget-row:hover { background: var(--bg); margin: 0 -20px; padding: 12px 20px; }
+
+        .budget-name {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .budget-amount {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .budget-total {
+            background: linear-gradient(135deg, rgba(45,90,61,0.1) 0%, rgba(45,90,61,0.05) 100%);
+            margin: -20px -20px -20px;
+            padding: 16px 20px;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        }
+
+        .budget-total .budget-name {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .budget-total .budget-amount {
+            font-size: 18px;
+        }
+
+        .guide-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .guide-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .guide-content {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .guide-content p { margin-bottom: 8px; }
+        .guide-content p:last-child { margin-bottom: 0; }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: var(--card);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 20px;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+            z-index: 100;
+            border-top: 1px solid var(--border);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            min-width: 60px;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(45,90,61,0.1) 0%, rgba(45,90,61,0.05) 100%);
+        }
+
+        .nav-icon {
+            font-size: 22px;
+            transition: transform 0.25s ease;
+        }
+
+        .nav-item.active .nav-icon { transform: scale(1.15); }
+
+        .nav-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .nav-item.active .nav-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.show { display: flex; align-items: flex-end; }
+
+        .modal-content {
+            background: var(--card);
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            padding: 24px;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .modal-close:hover { color: var(--text); }
+
+        .search-input {
+            width: 100%;
+            background: var(--bg);
+            border: none;
+            border-radius: var(--radius-lg);
+            padding: 14px 16px;
+            font-size: 15px;
+            margin-bottom: 16px;
+            outline: none;
+        }
+
+        .search-input:focus { box-shadow: 0 0 0 2px var(--primary); }
+
+        .search-results {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 14px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .search-result-item:hover { background: var(--bg); }
+        .search-result-item:last-child { border-bottom: none; }
+
+        .search-result-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .search-result-province {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .user-profile {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .menu-list {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .menu-item:hover { background: var(--bg); }
+        .menu-item:last-child { border-bottom: none; }
+
+        .menu-icon {
+            font-size: 24px;
+            margin-right: 14px;
+        }
+
+        .menu-text {
+            flex: 1;
+            font-size: 15px;
+            color: var(--text);
+        }
+
+        .menu-arrow {
+            font-size: 18px;
+            color: var(--text-muted);
+        }
+
+        .stat-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .stat-card-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-card-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, rgba(52,152,219,0.1) 0%, rgba(52,152,219,0.05) 100%);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .tip-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tip-content {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-lg);
+            font-size: 14px;
+            z-index: 300;
+            animation: toastIn 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translate(-50%, -20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        .toast.hide { animation: toastOut 0.3s ease forwards; }
+        @keyframes toastOut {
+            to { opacity: 0; transform: translate(-50%, -20px); }
+        }
+
+        @media (max-width: 480px) {
+            .feature-grid { gap: 10px; }
+            .feature-card { padding: 16px 12px; }
+            .feature-icon { font-size: 28px; }
+            .feature-title { font-size: 13px; }
+            .budget-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container" id="app">
+        <div class="status-bar">
+            <span class="status-time" id="statusTime">9:41</span>
+            <div class="status-icons">📶 🔋</div>
+        </div>
+
+        <div class="header">
+            <div class="header-top">
+                <div class="logo">
+                    <span class="logo-icon">🏔️</span>
+                    <span class="logo-text">山河旅图</span>
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn" onclick="openSearch()">🔍</button>
+                    <button class="header-btn" onclick="showPage('profilePage')">👤</button>
+                </div>
+            </div>
+            <div class="search-bar" onclick="openSearch()">
+                <span class="search-icon">🔍</span>
+                <span class="search-text">搜索城市、景点、攻略...</span>
+            </div>
+        </div>
+
+        <div id="homePage" class="page active">
+            <div class="hero-banner">
+                <div class="hero-bg">🏔️</div>
+                <div class="hero-title">陕西+邻省 全境深度游</div>
+                <div class="hero-subtitle">覆盖8省72城，从西安出发，探索壮丽山河</div>
+                <div class="stats-grid">
+                    <div class="stat-item"><div class="stat-value">8</div><div class="stat-label">省份</div></div>
+                    <div class="stat-item"><div class="stat-value">72</div><div class="stat-label">城市</div></div>
+                    <div class="stat-item"><div class="stat-value">300+</div><div class="stat-label">景点</div></div>
+                    <div class="stat-item"><div class="stat-value">5</div><div class="stat-label">路线</div></div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <span class="section-title">🚀 快捷功能</span>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card" onclick="showPage('cityPage')">
+                    <div class="feature-icon">🏙️</div>
+                    <div class="feature-title">城市探索</div>
+                    <div class="feature-desc">72城详细攻略</div>
+                </div>
+                <div class="feature-card" onclick="showPage('guidePage')">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-title">攻略库</div>
+                    <div class="feature-desc">全省详细攻略</div>
+                </div>
+                <div class="feature-card" onclick="showPage('budgetPage')">
+                    <div class="feature-icon">💰</div>
+                    <div class="feature-title">预算规划</div>
+                    <div class="feature-desc">智能预算计算</div>
+                </div>
+                <div class="feature-card" onclick="showPage('routePage')">
+                    <div class="feature-icon">🛤️</div>
+                    <div class="feature-title">路线推荐</div>
+                    <div class="feature-desc">经典跨省环线</div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <span class="section-title">🌟 热门路线</span>
+                <span class="section-more" onclick="showPage('routePage')">查看全部 →</span>
+            </div>
+
+            <div class="route-card" onclick="showPage('routePage')">
+                <div class="route-header">
+                    <span class="route-name">晋陕豫黄金三角</span>
+                    <span class="route-duration">5-7天</span>
+                </div>
+                <div class="route-desc">西安→运城→洛阳→郑州→焦作→晋城→临汾→延安→西安</div>
+            </div>
+
+            <div class="route-card" onclick="showPage('routePage')">
+                <div class="route-header">
+                    <span class="route-name">甘宁蒙丝路大环</span>
+                    <span class="route-duration">8-10天</span>
+                </div>
+                <div class="route-desc">西安→兰州→武威→张掖→嘉峪关→银川→中卫→西安</div>
+            </div>
+
+            <div class="tip-box">
+                <div class="tip-title">💡 温馨提示</div>
+                <div class="tip-content">点击城市卡片可查看详细攻略和计算预算，收藏喜欢的城市方便下次查看。</div>
+            </div>
+        </div>
+
+        <div id="cityPage" class="page">
+            <div class="province-tabs" id="provinceTabs">
+                <button class="province-btn active" onclick="renderCities('all')">全部</button>
+                <button class="province-btn" onclick="renderCities('陕西')">陕西</button>
+                <button class="province-btn" onclick="renderCities('甘肃')">甘肃</button>
+                <button class="province-btn" onclick="renderCities('宁夏')">宁夏</button>
+                <button class="province-btn" onclick="renderCities('内蒙古')">内蒙古</button>
+                <button class="province-btn" onclick="renderCities('山西')">山西</button>
+                <button class="province-btn" onclick="renderCities('河南')">河南</button>
+                <button class="province-btn" onclick="renderCities('湖北')">湖北</button>
+                <button class="province-btn" onclick="renderCities('四川')">四川</button>
+            </div>
+
+            <div class="summary-bar">
+                <div class="summary-label">📊 当前省份总开销预估 (2天/城标准)</div>
+                <div class="summary-value" id="provinceTotalCost">加载中...</div>
+            </div>
+
+            <div id="citiesContainer"></div>
+        </div>
+
+        <div id="guidePage" class="page">
+            <div class="guide-card">
+                <div class="guide-title">📚 全域攻略库</div>
+                <div class="guide-content">
+                    <p>涵盖陕西、甘肃、宁夏、内蒙古、山西、河南、湖北、四川共72城深度攻略，包含路线、酒店、美食、门票预算。</p>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-title">📍 陕西省</div>
+                <div class="guide-content">
+                    <p><strong>城市：</strong>西安、宝鸡、咸阳、渭南、延安、榆林、汉中、安康、商洛、铜川</p>
+                    <p><strong>推荐路线：</strong>西安→兵马俑→华山→延安→壶口瀑布→西安</p>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-title">📍 甘肃省</div>
+                <div class="guide-content">
+                    <p><strong>城市：</strong>兰州、天水、平凉、庆阳、陇南、定西、白银、武威、金昌、张掖、酒泉、嘉峪关</p>
+                    <p><strong>推荐路线：</strong>兰州→武威→张掖丹霞→嘉峪关→敦煌</p>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-title">📍 宁夏</div>
+                <div class="guide-content">
+                    <p><strong>城市：</strong>银川、石嘴山、吴忠、中卫、固原</p>
+                    <p><strong>推荐路线：</strong>银川→西夏陵→西部影城→沙湖→中卫沙坡头</p>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-title">📍 山西省</div>
+                <div class="guide-content">
+                    <p><strong>城市：</strong>太原、大同、朔州、忻州、阳泉、晋中、吕梁、长治、晋城、临汾、运城</p>
+                    <p><strong>推荐路线：</strong>太原→晋祠→平遥古城→大同云冈石窟→五台山</p>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-title">📍 河南省</div>
+                <div class="guide-content">
+                    <p><strong>城市：</strong>郑州、洛阳、开封、新乡、焦作、济源、三门峡、南阳、商丘、信阳</p>
+                    <p><strong>推荐路线：</strong>郑州→洛阳龙门石窟→开封清明上河园→焦作云台山</p>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-title">📍 湖北省</div>
+                <div class="guide-content">
+                    <p><strong>城市：</strong>武汉、十堰、襄阳、宜昌、荆州、荆门、随州、恩施</p>
+                    <p><strong>推荐路线：</strong>武汉→黄鹤楼→武当山→三峡大坝→恩施大峡谷</p>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-title">📍 四川省</div>
+                <div class="guide-content">
+                    <p><strong>城市：</strong>成都、绵阳、德阳、广元、巴中、达州、南充、广安、遂宁、泸州、宜宾、攀枝花</p>
+                    <p><strong>推荐路线：</strong>成都→熊猫基地→三星堆→剑门关→阆中古城</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="budgetPage" class="page">
+            <div class="budget-summary">
+                <div class="budget-title" style="font-size:15px;font-weight:600;margin-bottom:16px;color:var(--primary);">💰 全省综合预算参考</div>
+                <div id="budgetSummaryContent"></div>
+            </div>
+
+            <div class="tip-box">
+                <div class="tip-title">💡 预算说明</div>
+                <div class="tip-content">
+                    <p>以上预算基于2天/城市标准（住宿2晚+餐饮2天+市内交通2天+门票），不含大交通费用。</p>
+                    <p>西安出发高铁往返根据城市不同约100-550元/城，建议每人备用金+20%作为机动资金。</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="routePage" class="page">
+            <div class="route-card">
+                <div class="route-header">
+                    <span class="route-name">晋陕豫黄金三角</span>
+                    <span class="route-duration">5-7天</span>
+                </div>
+                <div class="route-desc">西安→运城(关帝庙)→洛阳(龙门石窟)→郑州(河南博物院)→焦作(云台山)→晋城(皇城相府)→临汾(壶口)→延安→西安</div>
+            </div>
+
+            <div class="route-card">
+                <div class="route-header">
+                    <span class="route-name">甘宁蒙丝路大环</span>
+                    <span class="route-duration">8-10天</span>
+                </div>
+                <div class="route-desc">西安→兰州→武威→张掖(丹霞)→嘉峪关→酒泉→额济纳旗(胡杨林)→银川(西夏陵)→中卫(沙坡头)→西安</div>
+            </div>
+
+            <div class="route-card">
+                <div class="route-header">
+                    <span class="route-name">鄂西+川东北秘境</span>
+                    <span class="route-duration">6-8天</span>
+                </div>
+                <div class="route-desc">西安→安康→恩施(大峡谷)→宜昌(三峡)→神农架→十堰(武当山)→西安</div>
+            </div>
+
+            <div class="route-card">
+                <div class="route-header">
+                    <span class="route-name">秦岭全景穿越</span>
+                    <span class="route-duration">4-5天</span>
+                </div>
+                <div class="route-desc">西安→宝鸡(太白山)→汉中(龙头山)→广元(剑门关)→巴中(光雾山)→安康→西安</div>
+            </div>
+
+            <div class="route-card">
+                <div class="route-header">
+                    <span class="route-name">西北风情线</span>
+                    <span class="route-duration">7-9天</span>
+                </div>
+                <div class="route-desc">西安→延安(壶口)→榆林(波浪谷)→鄂尔多斯(响沙湾)→银川→中卫(沙坡头)→兰州→天水→西安</div>
+            </div>
+
+            <div class="tip-box">
+                <div class="tip-title">💡 路线提示</div>
+                <div class="tip-content">可在城市探索页面中自由查看每个城市的详细信息，生成个人专属旅行方案。建议根据季节和个人兴趣选择合适的路线。</div>
+            </div>
+        </div>
+
+        <div id="profilePage" class="page">
+            <div class="user-profile">
+                <div class="profile-avatar">🧳</div>
+                <div class="profile-name">旅行爱好者</div>
+                <div class="profile-desc">探索山河，记录美好旅程</div>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-card-value" id="visitedCount">0</div>
+                    <div class="stat-card-label">已访问</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value" id="favoriteCount">0</div>
+                    <div class="stat-card-label">收藏</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value" id="budgetTotal">0</div>
+                    <div class="stat-card-label">预算(元)</div>
+                </div>
+            </div>
+
+            <div class="menu-list">
+                <div class="menu-item" onclick="showFavorites()">
+                    <span class="menu-icon">❤️</span>
+                    <span class="menu-text">我的收藏</span>
+                    <span class="menu-arrow">→</span>
+                </div>
+                <div class="menu-item" onclick="showVisited()">
+                    <span class="menu-icon">📍</span>
+                    <span class="menu-text">足迹记录</span>
+                    <span class="menu-arrow">→</span>
+                </div>
+                <div class="menu-item" onclick="clearAllData()">
+                    <span class="menu-icon">🗑️</span>
+                    <span class="menu-text">清除数据</span>
+                    <span class="menu-arrow">→</span>
+                </div>
+                <div class="menu-item">
+                    <span class="menu-icon">ℹ️</span>
+                    <span class="menu-text">关于应用</span>
+                    <span class="menu-arrow">→</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="showPage('homePage')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">首页</span>
+            </div>
+            <div class="nav-item" onclick="showPage('cityPage')">
+                <span class="nav-icon">🏙️</span>
+                <span class="nav-label">城市</span>
+            </div>
+            <div class="nav-item" onclick="showPage('guidePage')">
+                <span class="nav-icon">📚</span>
+                <span class="nav-label">攻略</span>
+            </div>
+            <div class="nav-item" onclick="showPage('budgetPage')">
+                <span class="nav-icon">💰</span>
+                <span class="nav-label">预算</span>
+            </div>
+            <div class="nav-item" onclick="showPage('profilePage')">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">我的</span>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="searchModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">🔍 搜索</span>
+                    <button class="modal-close" onclick="closeSearch()">×</button>
+                </div>
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索城市、景点、攻略..." oninput="handleSearch()">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="favoritesModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">❤️ 我的收藏</span>
+                    <button class="modal-close" onclick="closeFavorites()">×</button>
+                </div>
+                <div id="favoritesList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const citiesData = [
+            { id: 1, name: "西安", province: "陕西", highlights: ["十三朝古都", "不夜城"], attractions: ["兵马俑", "大雁塔", "城墙", "陕历博"], food: "肉夹馍、凉皮、泡馍", hotelDay: 180, mealDay: 100, localTrans: 30, ticketsTotal: 220, travelFromXiAn: 0, route: "Day1:钟楼→鼓楼→回民街→城墙\nDay2:兵马俑→华清宫\nDay3:陕博→大雁塔→大唐不夜城" },
+            { id: 2, name: "宝鸡", province: "陕西", highlights: ["青铜器之乡", "太白山"], attractions: ["法门寺", "太白山", "青铜器博物院"], food: "岐山臊子面", hotelDay: 140, mealDay: 75, localTrans: 25, ticketsTotal: 150, travelFromXiAn: 50, route: "Day1:青铜器博物院→陈仓老街\nDay2:法门寺→太白山" },
+            { id: 3, name: "咸阳", province: "陕西", highlights: ["大秦帝都"], attractions: ["乾陵", "汉阳陵", "袁家村"], food: "汇通面", hotelDay: 130, mealDay: 70, localTrans: 20, ticketsTotal: 120, travelFromXiAn: 15, route: "Day1:咸阳博物馆→汇通夜市\nDay2:乾陵→袁家村" },
+            { id: 4, name: "渭南", province: "陕西", highlights: ["奇险华山"], attractions: ["华山", "少华山", "潼关古城"], food: "时辰包子", hotelDay: 150, mealDay: 80, localTrans: 30, ticketsTotal: 200, travelFromXiAn: 30, route: "Day1:华山一日游\nDay2:潼关古城" },
+            { id: 5, name: "延安", province: "陕西", highlights: ["革命圣地", "壶口"], attractions: ["宝塔山", "壶口瀑布", "雨岔大峡谷"], food: "洋芋擦擦", hotelDay: 150, mealDay: 80, localTrans: 30, ticketsTotal: 160, travelFromXiAn: 120, route: "Day1:宝塔山→革命纪念馆\nDay2:甘泉雨岔" },
+            { id: 6, name: "榆林", province: "陕西", highlights: ["塞上驼城"], attractions: ["镇北台", "红石峡", "波浪谷"], food: "拼三鲜", hotelDay: 140, mealDay: 75, localTrans: 25, ticketsTotal: 130, travelFromXiAn: 150, route: "Day1:镇北台→红石峡\nDay2:波浪谷" },
+            { id: 7, name: "汉中", province: "陕西", highlights: ["西北小江南"], attractions: ["龙头山", "武侯墓", "青木川"], food: "热米皮", hotelDay: 135, mealDay: 70, localTrans: 25, ticketsTotal: 140, travelFromXiAn: 100, route: "Day1:兴汉胜境→古汉台\nDay2:龙头山" },
+            { id: 8, name: "安康", province: "陕西", highlights: ["秦巴明珠"], attractions: ["瀛湖", "南宫山", "中坝峡谷"], food: "蒸面", hotelDay: 130, mealDay: 70, localTrans: 25, ticketsTotal: 120, travelFromXiAn: 120, route: "Day1:瀛湖\nDay2:南宫山" },
+            { id: 9, name: "商洛", province: "陕西", highlights: ["秦岭醉美"], attractions: ["金丝峡", "牛背梁", "柞水溶洞"], food: "商芝肉", hotelDay: 125, mealDay: 65, localTrans: 25, ticketsTotal: 110, travelFromXiAn: 80, route: "Day1:金丝峡\nDay2:牛背梁" },
+            { id: 10, name: "铜川", province: "陕西", highlights: ["药王故里"], attractions: ["药王山", "照金香山", "陈炉古镇"], food: "咸汤面", hotelDay: 120, mealDay: 65, localTrans: 20, ticketsTotal: 80, travelFromXiAn: 60, route: "Day1:药王山→陈炉古镇" },
+            { id: 11, name: "兰州", province: "甘肃", highlights: ["黄河之都"], attractions: ["中山桥", "白塔山", "甘肃省博"], food: "牛肉面", hotelDay: 170, mealDay: 85, localTrans: 30, ticketsTotal: 80, travelFromXiAn: 180, route: "Day1:黄河风情线\nDay2:甘肃省博物馆" },
+            { id: 12, name: "天水", province: "甘肃", highlights: ["麦积烟雨"], attractions: ["麦积山石窟", "伏羲庙"], food: "呱呱", hotelDay: 140, mealDay: 70, localTrans: 25, ticketsTotal: 120, travelFromXiAn: 150, route: "Day1:麦积山石窟" },
+            { id: 13, name: "平凉", province: "甘肃", highlights: ["崆峒问道"], attractions: ["崆峒山"], food: "饸饹面", hotelDay: 135, mealDay: 70, localTrans: 25, ticketsTotal: 100, travelFromXiAn: 200, route: "Day1:崆峒山一日" },
+            { id: 14, name: "庆阳", province: "甘肃", highlights: ["周祖农耕"], attractions: ["周祖陵", "北石窟寺"], food: "土暖锅", hotelDay: 125, mealDay: 65, localTrans: 20, ticketsTotal: 80, travelFromXiAn: 180, route: "Day1:周祖陵→药王洞" },
+            { id: 15, name: "陇南", province: "甘肃", highlights: ["陇上江南"], attractions: ["官鹅沟"], food: "洋芋搅团", hotelDay: 140, mealDay: 70, localTrans: 25, ticketsTotal: 130, travelFromXiAn: 280, route: "Day1:官鹅沟" },
+            { id: 16, name: "定西", province: "甘肃", highlights: ["渭河源头"], attractions: ["渭河源"], food: "陇西腊肉", hotelDay: 120, mealDay: 65, localTrans: 20, ticketsTotal: 70, travelFromXiAn: 200, route: "Day1:渭河源" },
+            { id: 17, name: "白银", province: "甘肃", highlights: ["黄河石林"], attractions: ["黄河石林"], food: "酸烂肉", hotelDay: 130, mealDay: 70, localTrans: 25, ticketsTotal: 100, travelFromXiAn: 250, route: "Day1:黄河石林" },
+            { id: 18, name: "武威", province: "甘肃", highlights: ["天马故乡"], attractions: ["雷台汉墓", "武威文庙"], food: "三套车", hotelDay: 130, mealDay: 70, localTrans: 25, ticketsTotal: 90, travelFromXiAn: 280, route: "Day1:雷台汉墓→文庙" },
+            { id: 19, name: "金昌", province: "甘肃", highlights: ["镍都"], attractions: ["紫金花海"], food: "羊肉垫卷子", hotelDay: 130, mealDay: 70, localTrans: 20, ticketsTotal: 60, travelFromXiAn: 300, route: "Day1:紫金花海" },
+            { id: 20, name: "张掖", province: "甘肃", highlights: ["七彩丹霞"], attractions: ["七彩丹霞", "大佛寺"], food: "搓鱼面", hotelDay: 150, mealDay: 75, localTrans: 30, ticketsTotal: 150, travelFromXiAn: 320, route: "Day1:七彩丹霞" },
+            { id: 21, name: "酒泉", province: "甘肃", highlights: ["航天之城"], attractions: ["酒泉卫星发射中心"], food: "糊锅", hotelDay: 140, mealDay: 75, localTrans: 25, ticketsTotal: 100, travelFromXiAn: 400, route: "Day1:卫星发射中心" },
+            { id: 22, name: "嘉峪关", province: "甘肃", highlights: ["天下第一雄关"], attractions: ["嘉峪关城楼"], food: "烤肉", hotelDay: 160, mealDay: 80, localTrans: 25, ticketsTotal: 110, travelFromXiAn: 420, route: "Day1:嘉峪关城楼" },
+            { id: 23, name: "银川", province: "宁夏", highlights: ["塞上湖城"], attractions: ["西夏陵", "西部影城", "沙湖"], food: "手抓羊肉", hotelDay: 170, mealDay: 85, localTrans: 30, ticketsTotal: 170, travelFromXiAn: 240, route: "Day1:西夏陵→西部影城\nDay2:沙湖" },
+            { id: 24, name: "石嘴山", province: "宁夏", highlights: ["沙湖"], attractions: ["沙湖"], food: "沙湖大鱼头", hotelDay: 140, mealDay: 70, localTrans: 25, ticketsTotal: 100, travelFromXiAn: 280, route: "Day1:沙湖" },
+            { id: 25, name: "吴忠", province: "宁夏", highlights: ["早茶文化"], attractions: ["黄河楼", "108塔"], food: "吴忠早茶", hotelDay: 140, mealDay: 75, localTrans: 25, ticketsTotal: 90, travelFromXiAn: 260, route: "Day1:黄河楼→108塔" },
+            { id: 26, name: "中卫", province: "宁夏", highlights: ["沙坡头"], attractions: ["沙坡头", "66号公路"], food: "蒿子面", hotelDay: 160, mealDay: 80, localTrans: 30, ticketsTotal: 180, travelFromXiAn: 300, route: "Day1:沙坡头" },
+            { id: 27, name: "固原", province: "宁夏", highlights: ["六盘山"], attractions: ["六盘山", "须弥山"], food: "生汆面", hotelDay: 130, mealDay: 65, localTrans: 20, ticketsTotal: 90, travelFromXiAn: 320, route: "Day1:六盘山" },
+            { id: 28, name: "鄂尔多斯", province: "内蒙古", highlights: ["响沙湾"], attractions: ["响沙湾", "成吉思汗陵"], food: "手把肉", hotelDay: 190, mealDay: 95, localTrans: 35, ticketsTotal: 220, travelFromXiAn: 350, route: "Day1:响沙湾" },
+            { id: 29, name: "乌海", province: "内蒙古", highlights: ["黄河明珠"], attractions: ["乌海湖"], food: "托县炖鱼", hotelDay: 150, mealDay: 75, localTrans: 25, ticketsTotal: 100, travelFromXiAn: 380, route: "Day1:乌海湖" },
+            { id: 30, name: "阿拉善盟", province: "内蒙古", highlights: ["胡杨林"], attractions: ["胡杨林"], food: "驼肉", hotelDay: 200, mealDay: 90, localTrans: 40, ticketsTotal: 260, travelFromXiAn: 450, route: "Day1:胡杨林" },
+            { id: 31, name: "巴彦淖尔", province: "内蒙古", highlights: ["塞上江南"], attractions: ["乌梁素海"], food: "河套硬四盘", hotelDay: 150, mealDay: 75, localTrans: 30, ticketsTotal: 80, travelFromXiAn: 420, route: "Day1:乌梁素海" },
+            { id: 32, name: "太原", province: "山西", highlights: ["龙城"], attractions: ["晋祠", "山西博物院"], food: "刀削面", hotelDay: 170, mealDay: 85, localTrans: 30, ticketsTotal: 100, travelFromXiAn: 230, route: "Day1:晋祠→博物院" },
+            { id: 33, name: "大同", province: "山西", highlights: ["云冈石窟"], attractions: ["云冈石窟", "悬空寺"], food: "刀削面", hotelDay: 160, mealDay: 80, localTrans: 30, ticketsTotal: 200, travelFromXiAn: 280, route: "Day1:云冈石窟" },
+            { id: 34, name: "朔州", province: "山西", highlights: ["应县木塔"], attractions: ["应县木塔"], food: "右玉羊肉", hotelDay: 130, mealDay: 70, localTrans: 25, ticketsTotal: 80, travelFromXiAn: 300, route: "Day1:应县木塔" },
+            { id: 35, name: "忻州", province: "山西", highlights: ["五台山"], attractions: ["五台山"], food: "定襄蒸肉", hotelDay: 160, mealDay: 80, localTrans: 30, ticketsTotal: 200, travelFromXiAn: 320, route: "Day1:五台山" },
+            { id: 36, name: "阳泉", province: "山西", highlights: ["娘子关"], attractions: ["娘子关"], food: "压饼", hotelDay: 130, mealDay: 70, localTrans: 25, ticketsTotal: 90, travelFromXiAn: 310, route: "Day1:娘子关" },
+            { id: 37, name: "晋中", province: "山西", highlights: ["平遥古城"], attractions: ["平遥古城", "乔家大院"], food: "平遥牛肉", hotelDay: 160, mealDay: 80, localTrans: 25, ticketsTotal: 150, travelFromXiAn: 250, route: "Day1:平遥古城" },
+            { id: 38, name: "吕梁", province: "山西", highlights: ["碛口古镇"], attractions: ["碛口古镇"], food: "柳林碗托", hotelDay: 130, mealDay: 70, localTrans: 25, ticketsTotal: 80, travelFromXiAn: 280, route: "Day1:碛口古镇" },
+            { id: 39, name: "长治", province: "山西", highlights: ["太行山大峡谷"], attractions: ["八泉峡"], food: "壶关羊汤", hotelDay: 140, mealDay: 70, localTrans: 25, ticketsTotal: 120, travelFromXiAn: 290, route: "Day1:八泉峡" },
+            { id: 40, name: "晋城", province: "山西", highlights: ["皇城相府"], attractions: ["皇城相府"], food: "炒凉粉", hotelDay: 145, mealDay: 75, localTrans: 25, ticketsTotal: 130, travelFromXiAn: 300, route: "Day1:皇城相府" },
+            { id: 41, name: "临汾", province: "山西", highlights: ["壶口瀑布"], attractions: ["壶口瀑布"], food: "牛肉丸子面", hotelDay: 150, mealDay: 75, localTrans: 30, ticketsTotal: 150, travelFromXiAn: 260, route: "Day1:壶口瀑布" },
+            { id: 42, name: "运城", province: "山西", highlights: ["关公故里"], attractions: ["解州关帝庙", "盐湖"], food: "大盘鸡", hotelDay: 140, mealDay: 70, localTrans: 25, ticketsTotal: 110, travelFromXiAn: 200, route: "Day1:关帝庙→盐湖" },
+            { id: 43, name: "郑州", province: "河南", highlights: ["商都"], attractions: ["河南博物院", "只有河南"], food: "烩面", hotelDay: 190, mealDay: 90, localTrans: 35, ticketsTotal: 150, travelFromXiAn: 230, route: "Day1:博物院→只有河南" },
+            { id: 44, name: "洛阳", province: "河南", highlights: ["神都洛阳"], attractions: ["龙门石窟", "白马寺", "老君山"], food: "水席", hotelDay: 180, mealDay: 85, localTrans: 30, ticketsTotal: 220, travelFromXiAn: 130, route: "Day1:龙门石窟→白马寺" },
+            { id: 45, name: "开封", province: "河南", highlights: ["八朝古都"], attractions: ["清明上河园"], food: "灌汤包", hotelDay: 160, mealDay: 80, localTrans: 25, ticketsTotal: 180, travelFromXiAn: 220, route: "Day1:清明上河园" },
+            { id: 46, name: "新乡", province: "河南", highlights: ["八里沟"], attractions: ["八里沟"], food: "红焖羊肉", hotelDay: 140, mealDay: 70, localTrans: 25, ticketsTotal: 120, travelFromXiAn: 260, route: "Day1:八里沟" },
+            { id: 47, name: "焦作", province: "河南", highlights: ["云台山"], attractions: ["云台山"], food: "闹汤驴肉", hotelDay: 160, mealDay: 75, localTrans: 25, ticketsTotal: 160, travelFromXiAn: 240, route: "Day1:云台山" },
+            { id: 48, name: "济源", province: "河南", highlights: ["王屋山"], attractions: ["王屋山"], food: "土馍", hotelDay: 130, mealDay: 70, localTrans: 25, ticketsTotal: 100, travelFromXiAn: 250, route: "Day1:王屋山" },
+            { id: 49, name: "三门峡", province: "河南", highlights: ["地坑院"], attractions: ["陕州地坑院"], food: "灵宝肉夹馍", hotelDay: 140, mealDay: 70, localTrans: 25, ticketsTotal: 90, travelFromXiAn: 180, route: "Day1:地坑院" },
+            { id: 50, name: "南阳", province: "河南", highlights: ["卧龙岗"], attractions: ["卧龙岗"], food: "新野板面", hotelDay: 140, mealDay: 70, localTrans: 25, ticketsTotal: 100, travelFromXiAn: 260, route: "Day1:卧龙岗" },
+            { id: 51, name: "商丘", province: "河南", highlights: ["三商之源"], attractions: ["商丘古城"], food: "水激馍", hotelDay: 130, mealDay: 70, localTrans: 25, ticketsTotal: 100, travelFromXiAn: 300, route: "Day1:商丘古城" },
+            { id: 52, name: "信阳", province: "河南", highlights: ["茶都"], attractions: ["南湾湖"], food: "炖菜", hotelDay: 140, mealDay: 70, localTrans: 25, ticketsTotal: 120, travelFromXiAn: 350, route: "Day1:南湾湖" },
+            { id: 53, name: "武汉", province: "湖北", highlights: ["江城"], attractions: ["黄鹤楼", "东湖"], food: "热干面", hotelDay: 220, mealDay: 100, localTrans: 40, ticketsTotal: 150, travelFromXiAn: 450, route: "Day1:黄鹤楼→户部巷" },
+            { id: 54, name: "十堰", province: "湖北", highlights: ["武当山"], attractions: ["武当山"], food: "三合汤", hotelDay: 170, mealDay: 85, localTrans: 35, ticketsTotal: 200, travelFromXiAn: 320, route: "Day1:武当山" },
+            { id: 55, name: "襄阳", province: "湖北", highlights: ["古隆中"], attractions: ["古隆中", "襄阳古城"], food: "牛肉面", hotelDay: 150, mealDay: 75, localTrans: 25, ticketsTotal: 120, travelFromXiAn: 360, route: "Day1:古隆中" },
+            { id: 56, name: "宜昌", province: "湖北", highlights: ["三峡"], attractions: ["三峡大坝"], food: "萝卜饺子", hotelDay: 170, mealDay: 85, localTrans: 30, ticketsTotal: 200, travelFromXiAn: 480, route: "Day1:三峡大坝" },
+            { id: 57, name: "荆州", province: "湖北", highlights: ["古城墙"], attractions: ["荆州古城"], food: "鱼糕", hotelDay: 140, mealDay: 75, localTrans: 25, ticketsTotal: 150, travelFromXiAn: 420, route: "Day1:古城墙" },
+            { id: 58, name: "荆门", province: "湖北", highlights: ["明显陵"], attractions: ["明显陵"], food: "风干鸡", hotelDay: 130, mealDay: 70, localTrans: 25, ticketsTotal: 100, travelFromXiAn: 400, route: "Day1:明显陵" },
+            { id: 59, name: "随州", province: "湖北", highlights: ["炎帝故里"], attractions: ["炎帝故里"], food: "拐子饭", hotelDay: 130, mealDay: 70, localTrans: 25, ticketsTotal: 90, travelFromXiAn: 380, route: "Day1:炎帝故里" },
+            { id: 60, name: "恩施", province: "湖北", highlights: ["仙居恩施"], attractions: ["恩施大峡谷", "屏山峡谷"], food: "小土豆", hotelDay: 180, mealDay: 85, localTrans: 35, ticketsTotal: 280, travelFromXiAn: 500, route: "Day1:恩施大峡谷" },
+            { id: 61, name: "成都", province: "四川", highlights: ["天府之国"], attractions: ["熊猫基地", "武侯祠"], food: "火锅", hotelDay: 250, mealDay: 120, localTrans: 40, ticketsTotal: 180, travelFromXiAn: 260, route: "Day1:熊猫基地→宽窄巷子" },
+            { id: 62, name: "绵阳", province: "四川", highlights: ["科技城"], attractions: ["越王楼"], food: "绵阳米粉", hotelDay: 150, mealDay: 75, localTrans: 25, ticketsTotal: 80, travelFromXiAn: 240, route: "Day1:越王楼" },
+            { id: 63, name: "德阳", province: "四川", highlights: ["三星堆"], attractions: ["三星堆博物馆"], food: "罗江豆鸡", hotelDay: 140, mealDay: 75, localTrans: 25, ticketsTotal: 80, travelFromXiAn: 230, route: "Day1:三星堆" },
+            { id: 64, name: "广元", province: "四川", highlights: ["剑门关"], attractions: ["剑门关", "千佛崖"], food: "剑门豆腐", hotelDay: 145, mealDay: 75, localTrans: 25, ticketsTotal: 130, travelFromXiAn: 200, route: "Day1:剑门关" },
+            { id: 65, name: "巴中", province: "四川", highlights: ["光雾山"], attractions: ["光雾山"], food: "油茶", hotelDay: 135, mealDay: 70, localTrans: 25, ticketsTotal: 120, travelFromXiAn: 280, route: "Day1:光雾山" },
+            { id: 66, name: "达州", province: "四川", highlights: ["八台山"], attractions: ["八台山"], food: "灯影牛肉", hotelDay: 135, mealDay: 70, localTrans: 25, ticketsTotal: 110, travelFromXiAn: 300, route: "Day1:八台山" },
+            { id: 67, name: "南充", province: "四川", highlights: ["阆中古城"], attractions: ["阆中古城"], food: "川北凉粉", hotelDay: 150, mealDay: 75, localTrans: 25, ticketsTotal: 110, travelFromXiAn: 270, route: "Day1:阆中古城" },
+            { id: 68, name: "广安", province: "四川", highlights: ["邓小平故里"], attractions: ["邓小平故里"], food: "岳池米粉", hotelDay: 135, mealDay: 70, localTrans: 25, ticketsTotal: 80, travelFromXiAn: 310, route: "Day1:邓小平故里" },
+            { id: 69, name: "遂宁", province: "四川", highlights: ["死海"], attractions: ["中国死海"], food: "遂宁冲", hotelDay: 135, mealDay: 70, localTrans: 25, ticketsTotal: 120, travelFromXiAn: 290, route: "Day1:死海" },
+            { id: 70, name: "泸州", province: "四川", highlights: ["酒城"], attractions: ["泸州老窖"], food: "白糕", hotelDay: 140, mealDay: 75, localTrans: 25, ticketsTotal: 80, travelFromXiAn: 400, route: "Day1:泸州老窖" },
+            { id: 71, name: "宜宾", province: "四川", highlights: ["蜀南竹海"], attractions: ["蜀南竹海"], food: "宜宾燃面", hotelDay: 155, mealDay: 80, localTrans: 30, ticketsTotal: 120, travelFromXiAn: 380, route: "Day1:蜀南竹海" },
+            { id: 72, name: "攀枝花", province: "四川", highlights: ["阳光花城"], attractions: ["二滩"], food: "芒果", hotelDay: 150, mealDay: 80, localTrans: 30, ticketsTotal: 100, travelFromXiAn: 550, route: "Day1:二滩" }
+        ];
+
+        let userData = {
+            favorites: [],
+            visited: [],
+            budgets: {}
+        };
+
+        function init() {
+            loadUserData();
+            updateStatusTime();
+            renderCities('all');
+            renderBudgetSummary();
+            updateProfileStats();
+            setInterval(updateStatusTime, 60000);
+        }
+
+        function loadUserData() {
+            const saved = localStorage.getItem('travelAppData');
+            if (saved) {
+                userData = JSON.parse(saved);
+            }
+        }
+
+        function saveUserData() {
+            localStorage.setItem('travelAppData', JSON.stringify(userData));
+            updateProfileStats();
+        }
+
+        function updateStatusTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('statusTime').textContent = `${hours}:${minutes}`;
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            document.getElementById(pageId).classList.add('active');
+            document.querySelector(`.nav-item[onclick="showPage('${pageId}')"]`)?.classList.add('active');
+
+            if (pageId === 'cityPage') renderCities('all');
+            if (pageId === 'budgetPage') renderBudgetSummary();
+            if (pageId === 'profilePage') updateProfileStats();
+        }
+
+        function renderCities(provinceFilter) {
+            document.querySelectorAll('.province-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.province-btn[onclick="renderCities('${provinceFilter}')"]`)?.classList.add('active');
+
+            let filtered = provinceFilter === 'all' ? citiesData : citiesData.filter(c => c.province === provinceFilter);
+            const container = document.getElementById('citiesContainer');
+
+            container.innerHTML = filtered.map(city => {
+                const isFavorite = userData.favorites.includes(city.id);
+                return `
+                    <div class="city-card">
+                        <button class="city-favorite ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(${city.id})">
+                            ${isFavorite ? '❤️' : '🤍'}
+                        </button>
+                        <div class="city-header">
+                            <span class="city-name">${city.name}</span>
+                            <span class="city-province">${city.province}</span>
+                        </div>
+                        <div class="city-highlights">
+                            ${city.highlights.map(h => `<span class="highlight-tag">✨ ${h}</span>`).join('')}
+                        </div>
+                        <div class="city-attractions">
+                            ${city.attractions.map(a => `<span class="attraction-tag">📌 ${a}</span>`).join('')}
+                        </div>
+                        <div class="city-food">🍜 ${city.food}</div>
+                        <div class="budget-grid">
+                            <div class="budget-item">
+                                <div class="budget-label">🚄 西安→</div>
+                                <div class="budget-value">${city.travelFromXiAn}元</div>
+                            </div>
+                            <div class="budget-item">
+                                <div class="budget-label">🏨 住宿</div>
+                                <div class="budget-value">${city.hotelDay}元</div>
+                            </div>
+                            <div class="budget-item">
+                                <div class="budget-label">🍜 餐饮</div>
+                                <div class="budget-value">${city.mealDay}元</div>
+                            </div>
+                            <div class="budget-item">
+                                <div class="budget-label">🎫 门票</div>
+                                <div class="budget-value">${city.ticketsTotal}元</div>
+                            </div>
+                        </div>
+                        <button class="calc-btn" onclick="calculateBudget(${city.id})">💰 计算预算</button>
+                        <div id="result_${city.id}" class="result-box"></div>
+                        <div class="route-box">
+                            <div class="route-title">🗺️ 路线</div>
+                            ${city.route}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            updateProvinceSummary(filtered);
+        }
+
+        function toggleFavorite(cityId) {
+            const index = userData.favorites.indexOf(cityId);
+            if (index > -1) {
+                userData.favorites.splice(index, 1);
+                showToast('已取消收藏');
+            } else {
+                userData.favorites.push(cityId);
+                showToast('已添加到收藏');
+            }
+            saveUserData();
+            renderCities(getCurrentProvince());
+        }
+
+        function getCurrentProvince() {
+            const activeBtn = document.querySelector('.province-btn.active');
+            return activeBtn ? activeBtn.textContent : 'all';
+        }
+
+        function calculateBudget(cityId) {
+            const city = citiesData.find(c => c.id === cityId);
+            if (!city) return;
+
+            const total = (city.hotelDay * 2) + (city.mealDay * 2) + (city.localTrans * 2) + city.ticketsTotal;
+            const perDay = total / 2;
+            const reserve = Math.ceil(total * 0.2);
+
+            userData.budgets[cityId] = total;
+            saveUserData();
+
+            const resDiv = document.getElementById(`result_${cityId}`);
+            resDiv.classList.add('show');
+            resDiv.innerHTML = `总花费: <span class="result-total">${Math.round(total)}元</span> | 日均:${Math.round(perDay)}元 | 建议备足:${Math.round(total + reserve)}元`;
+        }
+
+        function updateProvinceSummary(cities) {
+            let total = 0;
+            cities.forEach(c => total += (c.hotelDay * 2) + (c.mealDay * 2) + (c.localTrans * 2) + c.ticketsTotal);
+            const name = cities.length > 10 ? cities[0].province : '全部8省';
+            document.getElementById('provinceTotalCost').textContent = `💰 ${name} 总预算 ≈ ${total.toLocaleString()} 元`;
+        }
+
+        function renderBudgetSummary() {
+            const provinceOrder = ["陕西", "甘肃", "宁夏", "内蒙古", "山西", "河南", "湖北", "四川"];
+            let totalAll = 0;
+            const rows = provinceOrder.map(p => {
+                const cities = citiesData.filter(c => c.province === p);
+                const sum = cities.reduce((acc, c) => acc + (c.hotelDay * 2 + c.mealDay * 2 + c.localTrans * 2 + c.ticketsTotal), 0);
+                totalAll += sum;
+                return `
+                    <div class="budget-row">
+                        <div class="budget-name">${p} (${cities.length}城)</div>
+                        <div class="budget-amount">约 ${sum.toLocaleString()} 元</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('budgetSummaryContent').innerHTML = `
+                ${rows}
+                <div class="budget-row budget-total">
+                    <div class="budget-name">🏔️ 8省72城总预算</div>
+                    <div class="budget-amount">约 ${totalAll.toLocaleString()} 元</div>
+                </div>
+            `;
+        }
+
+        function updateProfileStats() {
+            document.getElementById('visitedCount').textContent = userData.visited.length;
+            document.getElementById('favoriteCount').textContent = userData.favorites.length;
+
+            let total = 0;
+            Object.values(userData.budgets).forEach(b => total += b);
+            document.getElementById('budgetTotal').textContent = total.toLocaleString();
+        }
+
+        function openSearch() {
+            document.getElementById('searchModal').classList.add('show');
+            document.getElementById('searchInput').focus();
+            handleSearch();
+        }
+
+        function closeSearch() {
+            document.getElementById('searchModal').classList.remove('show');
+            document.getElementById('searchInput').value = '';
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const results = document.getElementById('searchResults');
+
+            if (!query) {
+                results.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);">输入关键词搜索城市、景点...</div>';
+                return;
+            }
+
+            const matches = citiesData.filter(city =>
+                city.name.toLowerCase().includes(query) ||
+                city.province.toLowerCase().includes(query) ||
+                city.attractions.some(a => a.toLowerCase().includes(query)) ||
+                city.food.toLowerCase().includes(query) ||
+                city.highlights.some(h => h.toLowerCase().includes(query))
+            );
+
+            if (matches.length === 0) {
+                results.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);">未找到匹配结果</div>';
+                return;
+            }
+
+            results.innerHTML = matches.map(city => `
+                <div class="search-result-item" onclick="goToCity(${city.id})">
+                    <div class="search-result-name">${city.name}</div>
+                    <div class="search-result-province">${city.province} · ${city.attractions.slice(0, 2).join('、')}</div>
+                </div>
+            `).join('');
+        }
+
+        function goToCity(cityId) {
+            closeSearch();
+            showPage('cityPage');
+            const city = citiesData.find(c => c.id === cityId);
+            if (city) {
+                renderCities(city.province);
+                setTimeout(() => {
+                    const element = document.getElementById(`result_${cityId}`);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 300);
+            }
+        }
+
+        function showFavorites() {
+            const modal = document.getElementById('favoritesModal');
+            const list = document.getElementById('favoritesList');
+
+            if (userData.favorites.length === 0) {
+                list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted);">还没有收藏的城市<br><br>去城市页面收藏吧</div>';
+            } else {
+                const favorites = userData.favorites.map(id => citiesData.find(c => c.id === id)).filter(Boolean);
+                list.innerHTML = favorites.map(city => `
+                    <div class="city-card" style="cursor:pointer;" onclick="goToCity(${city.id});closeFavorites();">
+                        <div class="city-header">
+                            <span class="city-name">${city.name}</span>
+                            <span class="city-province">${city.province}</span>
+                        </div>
+                        <div class="city-highlights">
+                            ${city.highlights.map(h => `<span class="highlight-tag">✨ ${h}</span>`).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            modal.classList.add('show');
+        }
+
+        function closeFavorites() {
+            document.getElementById('favoritesModal').classList.remove('show');
+        }
+
+        function showVisited() {
+            showToast('功能开发中...');
+        }
+
+        function clearAllData() {
+            if (confirm('确定要清除所有数据吗？')) {
+                userData = { favorites: [], visited: [], budgets: {} };
+                saveUserData();
+                showToast('数据已清除');
+            }
+        }
+
+        function showToast(message) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
