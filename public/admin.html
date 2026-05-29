@@ -191,18 +191,15 @@
             const app = document.getElementById('app');
 
             if (!currentUser) {
-                app.innerHTML = `
-                    <div class="login-container">
-                        <div class="login-box">
-                            <h2>🏔️ 山河旅图管理后台</h2>
-                            <div class="form-group">
-                                <label class="form-label">管理员密钥</label>
-                                <input type="password" class="form-input" id="adminKey" placeholder="请输入管理员密钥">
-                            </div>
-                            <button class="btn-primary" onclick="handleLogin()">登录</button>
-                        </div>
-                    </div>
-                `;
+                app.innerHTML = '<div class="login-container">' +
+                    '<div class="login-box">' +
+                    '<h2>🏔️ 山河旅图管理后台</h2>' +
+                    '<div class="form-group">' +
+                    '<label class="form-label">管理员密钥</label>' +
+                    '<input type="password" class="form-input" id="adminKey" placeholder="请输入管理员密钥">' +
+                    '</div>' +
+                    '<button class="btn-primary" onclick="handleLogin()">登录</button>' +
+                    '</div></div>';
             } else {
                 loadDashboard();
             }
@@ -210,144 +207,122 @@
 
         async function handleLogin() {
             const key = document.getElementById('adminKey').value.trim();
-            if (key === 'admin2024') {
-                currentUser = { id: 'admin', username: 'admin' };
-                localStorage.setItem('admin', key);
-                render();
-                showToast('登录成功');
-            } else {
+            if (key !== 'admin2024') {
                 showToast('密钥错误');
+                return;
+            }
+
+            try {
+                const res = await fetch(API_BASE + '/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'admin', password: 'admin2024' })
+                });
+
+                const data = await res.json();
+
+                if (data.success && data.token) {
+                    currentUser = data.user;
+                    localStorage.setItem('adminToken', data.token);
+                    render();
+                    showToast('登录成功');
+                } else {
+                    showToast('登录失败');
+                }
+            } catch (error) {
+                showToast('登录出错: ' + error.message);
             }
         }
 
         async function loadDashboard() {
             const app = document.getElementById('app');
+            const token = localStorage.getItem('adminToken');
 
-            const [usersRes, statsRes] = await Promise.all([
-                fetch(API_BASE + '/api/admin/users', {
-                    headers: { 'Authorization': 'Bearer admin2024' }
-                }),
-                fetch(API_BASE + '/api/stats')
-            ]);
-
-            const users = await usersRes.json();
-            const stats = await statsRes.json();
-
-            app.innerHTML = `
-                <div class="header">
-                    <h1>🏔️ 山河旅图 管理后台</h1>
-                    <p>欢迎回来，管理员</p>
-                </div>
-
-                <div class="container">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-value">${stats.users}</div>
-                            <div class="stat-label">总用户数</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">${stats.cities}</div>
-                            <div class="stat-label">城市数量</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">${stats.posts}</div>
-                            <div class="stat-label">帖子数量</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">${stats.views}</div>
-                            <div class="stat-label">总浏览量</div>
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <div class="section-title">👥 用户管理</div>
-                        <div style="margin-bottom: 16px;">
-                            <input type="text" class="form-input" placeholder="搜索用户名或昵称..." id="searchInput" oninput="filterUsers()">
-                        </div>
-                        <div id="usersTable">
-                            ${renderUsersTable(users)}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderUsersTable(users) {
-            if (users.length === 0) {
-                return '<div class="loading">暂无用户数据</div>';
+            if (!token) {
+                app.innerHTML = '<div class="loading">请先登录</div>';
+                render();
+                return;
             }
 
-            return `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>用户</th>
-                            <th>等级</th>
-                            <th>经验值</th>
-                            <th>发帖数</th>
-                            <th>注册时间</th>
-                            <th>最后登录</th>
-                            <th>状态</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersTableBody">
-                        ${users.map(u => \`
-                            <tr data-id="\${u.id}">
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                        <div class="avatar">\${u.avatar}</div>
-                                        <div>
-                                            <div style="font-weight: 600;">\${u.nickname}</div>
-                                            <div style="font-size: 12px; color: var(--text-secondary);">@\${u.username}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-success">Lv.\${u.level || 1}</span></td>
-                                <td>\${u.experience || 0}</td>
-                                <td>\${u.posts_count || 0}</td>
-                                <td>\${new Date(u.created_at).toLocaleDateString()}</td>
-                                <td>\${u.last_login ? new Date(u.last_login).toLocaleString() : '从未登录'}</td>
-                                <td>
-                                    <span class="badge \${u.is_online ? 'badge-success' : 'badge-warning'}">
-                                        \${u.is_online ? '在线' : '离线'}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger" onclick="deleteUser('\${u.id}', '\${u.username}')">
-                                        删除
-                                    </button>
-                                </td>
-                            </tr>
-                        \`).join('')}
-                    </tbody>
-                </table>
-            `;
+            try {
+                const [usersRes, statsRes] = await Promise.all([
+                    fetch(API_BASE + '/api/admin/users', {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    }),
+                    fetch(API_BASE + '/api/stats')
+                ]);
+
+                if (usersRes.status === 401) {
+                    localStorage.removeItem('adminToken');
+                    app.innerHTML = '<div class="loading">登录已过期，请重新登录</div>';
+                    setTimeout(() => render(), 2000);
+                    return;
+                }
+
+                const users = await usersRes.json();
+                const stats = await statsRes.json();
+
+                let usersHtml = '';
+                if (users.length === 0) {
+                    usersHtml = '<div class="loading">暂无用户数据</div>';
+                } else {
+                    usersHtml = '<table><thead><tr><th>用户</th><th>等级</th><th>经验值</th><th>发帖数</th><th>注册时间</th><th>状态</th><th>操作</th></tr></thead><tbody>';
+                    users.forEach(function(u) {
+                        usersHtml += '<tr data-id="' + u.id + '"><td><div style="display:flex;align-items:center;gap:12px;"><div class="avatar">' + u.avatar + '</div><div><div style="font-weight:600;">' + u.nickname + '</div><div style="font-size:12px;color:var(--text-secondary);">@' + u.username + '</div></div></div></td>';
+                        usersHtml += '<td><span class="badge badge-success">Lv.' + (u.level || 1) + '</span></td>';
+                        usersHtml += '<td>' + (u.experience || 0) + '</td>';
+                        usersHtml += '<td>' + (u.posts_count || 0) + '</td>';
+                        usersHtml += '<td>' + new Date(u.created_at).toLocaleDateString() + '</td>';
+                        usersHtml += '<td><span class="badge ' + (u.is_online ? 'badge-success' : 'badge-warning') + '">' + (u.is_online ? '在线' : '离线') + '</span></td>';
+                        usersHtml += '<td><button class="btn btn-danger" onclick="deleteUser(\'' + u.id + '\', \'' + u.username + '\')">删除</button></td></tr>';
+                    });
+                    usersHtml += '</tbody></table>';
+                }
+
+                app.innerHTML = '<div class="header"><h1>🏔️ 山河旅图 管理后台</h1><p>欢迎回来，管理员</p></div>' +
+                    '<div class="container">' +
+                    '<div class="stats-grid">' +
+                    '<div class="stat-card"><div class="stat-value">' + stats.users + '</div><div class="stat-label">总用户数</div></div>' +
+                    '<div class="stat-card"><div class="stat-value">' + stats.cities + '</div><div class="stat-label">城市数量</div></div>' +
+                    '<div class="stat-card"><div class="stat-value">' + stats.posts + '</div><div class="stat-label">帖子数量</div></div>' +
+                    '<div class="stat-card"><div class="stat-value">' + stats.views + '</div><div class="stat-label">总浏览量</div></div>' +
+                    '</div>' +
+                    '<div class="section">' +
+                    '<div class="section-title">👥 用户管理</div>' +
+                    '<div style="margin-bottom:16px;"><input type="text" class="form-input" placeholder="搜索用户名或昵称..." id="searchInput" oninput="filterUsers()"></div>' +
+                    '<div id="usersTable">' + usersHtml + '</div>' +
+                    '</div></div>';
+            } catch (error) {
+                console.error('Error:', error);
+                app.innerHTML = '<div class="loading">加载失败: ' + error.message + '<br><br><button onclick="loadDashboard()">重试</button></div>';
+            }
         }
 
         function filterUsers() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const rows = document.querySelectorAll('#usersTableBody tr');
-            rows.forEach(row => {
+            rows.forEach(function(row) {
                 const text = row.textContent.toLowerCase();
                 row.style.display = text.includes(query) ? '' : 'none';
             });
         }
 
         async function deleteUser(id, username) {
-            if (!confirm(\`确定要删除用户 "\${username}" 吗？此操作不可恢复！\`)) {
+            if (!confirm('确定要删除用户 "' + username + '" 吗？此操作不可恢复！')) {
                 return;
             }
 
+            const token = localStorage.getItem('adminToken');
+
             try {
-                const res = await fetch(API_BASE + \`/api/admin/users/\${id}\`, {
+                const res = await fetch(API_BASE + '/api/admin/users/' + id, {
                     method: 'DELETE',
-                    headers: { 'Authorization': 'Bearer admin2024' }
+                    headers: { 'Authorization': 'Bearer ' + token }
                 });
 
                 if (res.ok) {
                     showToast('用户已删除');
-                    document.querySelector(\`tr[data-id="\${id}"]\`).remove();
+                    document.querySelector('tr[data-id="' + id + '"]').remove();
                 } else {
                     showToast('删除失败');
                 }
@@ -356,9 +331,8 @@
             }
         }
 
-        // 检查是否已登录
-        const savedAdmin = localStorage.getItem('admin');
-        if (savedAdmin === 'admin2024') {
+        const savedAdminToken = localStorage.getItem('adminToken');
+        if (savedAdminToken) {
             currentUser = { id: 'admin', username: 'admin' };
         }
 
