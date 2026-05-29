@@ -71,15 +71,19 @@ db.serialize(function() {
     db.run("INSERT INTO cities (name, province_id, highlights, attractions, food, hotels) VALUES ('恩施', 7, '仙居恩施,大峡谷', '恩施大峡谷,屏山峡谷,腾龙洞', '土家油茶,小土豆', '瑞享国际,轩宇大酒店')");
     console.log('Cities inserted');
 
+    db.run("CREATE TABLE IF NOT EXISTS admins (id TEXT PRIMARY KEY, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, nickname TEXT DEFAULT '管理员', avatar TEXT DEFAULT '👑', level INTEGER DEFAULT 99, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, last_login DATETIME)");
+    console.log('Admins table created');
+
     var bcrypt = require('bcryptjs');
     var hashedPassword = bcrypt.hashSync('admin2024', 10);
+    var rementPassword = bcrypt.hashSync('rement06125', 10);
 
-    db.run("INSERT INTO users (id, username, password, nickname, avatar, level) VALUES ('admin', 'admin', ?, '管理员', '👑', 99)", [hashedPassword]);
-    db.run("INSERT INTO user_stats (user_id, posts_count, followers_count, following_count, travel_days) VALUES ('admin', 0, 999, 999, 999)");
+    db.run("INSERT INTO admins (id, username, password, nickname, avatar, level) VALUES ('admin', 'admin', ?, '超级管理员', '👑', 99)", [hashedPassword]);
+    db.run("INSERT INTO admins (id, username, password, nickname, avatar, level) VALUES ('rement', 'rement', ?, '管理员', '🛡️', 99)", [rementPassword]);
 
-    console.log('Admin account created');
-    console.log('Username: admin');
-    console.log('Password: admin2024');
+    console.log('Admin accounts created');
+    console.log('Account 1 - Username: admin, Password: admin2024');
+    console.log('Account 2 - Username: rement, Password: rement06125');
 });
 
 db.close(function(err) {

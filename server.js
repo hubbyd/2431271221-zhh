@@ -39,6 +39,7 @@ const authenticate = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         req.userId = decoded.userId;
+        req.isAdmin = decoded.isAdmin || false;
         next();
     } catch (err) {
         return res.status(401).json({ error: 'token无效或已过期' });
@@ -198,6 +199,142 @@ app.delete('/api/admin/users/:id', authenticate, (req, res) => {
     db.run('DELETE FROM users WHERE id = ?', [id], function(err) {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ success: true, message: '用户已删除' });
+    });
+});
+
+app.post('/api/admin/login', async (req, res) => {
+    const { username, password } = req.body;
+    
+    if (!username || !password) {
+        return res.status(400).json({ error: '请填写用户名和密码' });
+    }
+    
+    db.get('SELECT * FROM admins WHERE username = ?', [username], async (err, admin) => {
+        if (err) return res.status(500).json({ error: err.message });
+        
+        if (!admin) {
+            return res.status(401).json({ error: '用户名或密码错误' });
+        }
+        
+        const isMatch = await bcrypt.compare(password, admin.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: '用户名或密码错误' });
+        }
+        
+        db.run('UPDATE admins SET last_login = datetime("now") WHERE id = ?', [admin.id]);
+        
+        const token = jwt.sign({ userId: admin.id, isAdmin: true }, JWT_SECRET, { expiresIn: '7d' });
+        
+        res.json({
+            success: true,
+            token,
+            user: {
+                id: admin.id,
+                username: admin.username,
+                nickname: admin.nickname,
+                avatar: admin.avatar,
+                level: admin.level,
+                isAdmin: true
+            }
+        });
+    });
+});
+
+app.get('/api/admin/posts', authenticate, (req, res) => {
+    if (!req.isAdmin) {
+        return res.status(403).json({ error: '需要管理员权限' });
+    }
+    
+    db.all(`
+        SELECT p.id, p.title, p.content, p.images, p.likes_count, p.comments_count, p.created_at,
+               u.id as user_id, u.username, u.nickname, u.avatar,
+               c.name as city_name
+        FROM posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        LEFT JOIN cities c ON p.city_id = c.id
+        ORDER BY p.created_at DESC
+    `, (err, posts) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(posts);
+    });
+});
+
+app.delete('/api/admin/posts/:id', authenticate, (req, res) => {
+    if (!req.isAdmin) {
+        return res.status(403).json({ error: '需要管理员权限' });
+    }
+    
+    const { id } = req.params;
+    db.run('DELETE FROM posts WHERE id = ?', [id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        db.run('DELETE FROM comments WHERE post_id = ?', [id]);
+        db.run('DELETE FROM likes WHERE post_id = ?', [id]);
+        res.json({ success: true, message: '帖子已删除' });
+    });
+});
+
+app.get('/api/admin/comments', authenticate, (req, res) => {
+    if (!req.isAdmin) {
+        return res.status(403).json({ error: '需要管理员权限' });
+    }
+    
+    db.all(`
+        SELECT c.id, c.content, c.created_at,
+               u.id as user_id, u.username, u.nickname, u.avatar,
+               p.id as post_id, p.title as post_title
+        FROM comments c
+        LEFT JOIN users u ON c.user_id = u.id
+        LEFT JOIN posts p ON c.post_id = p.id
+        ORDER BY c.created_at DESC
+    `, (err, comments) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(comments);
+    });
+});
+
+app.delete('/api/admin/comments/:id', authenticate, (req, res) => {
+    if (!req.isAdmin) {
+        return res.status(403).json({ error: '需要管理员权限' });
+    }
+    
+    const { id } = req.params;
+    db.run('DELETE FROM comments WHERE id = ?', [id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ success: true, message: '评论已删除' });
+    });
+});
+
+app.get('/api/admin/stats', authenticate, (req, res) => {
+    if (!req.isAdmin) {
+        return res.status(403).json({ error: '需要管理员权限' });
+    }
+    
+    db.get('SELECT COUNT(*) as count FROM users', (err, usersRow) => {
+        if (err) return res.status(500).json({ error: err.message });
+        
+        db.get('SELECT COUNT(*) as count FROM posts', (err, postsRow) => {
+            if (err) return res.status(500).json({ error: err.message });
+            
+            db.get('SELECT COUNT(*) as count FROM comments', (err, commentsRow) => {
+                if (err) return res.status(500).json({ error: err.message });
+                
+                db.get('SELECT COUNT(*) as count FROM cities', (err, citiesRow) => {
+                    if (err) return res.status(500).json({ error: err.message });
+                    
+                    db.get('SELECT SUM(view_count) as total FROM cities', (err, viewsRow) => {
+                        if (err) return res.status(500).json({ error: err.message });
+                        
+                        res.json({
+                            users: usersRow.count,
+                            posts: postsRow.count,
+                            comments: commentsRow.count,
+                            cities: citiesRow.count,
+                            views: viewsRow.total || 0
+                        });
+                    });
+                });
+            });
+        });
     });
 });
 
