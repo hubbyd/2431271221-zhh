@@ -27,14 +27,14 @@
             background: var(--paper);
             color: var(--ink);
             min-height: 100vh;
-            padding-bottom: 90px;
+            padding-bottom: 20px;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a84b' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
-        .container { max-width: 480px; margin: 0 auto; }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 20px; }
         .header {
             background: linear-gradient(180deg, var(--ink) 0%, var(--ink-light) 100%);
             color: var(--gold);
-            padding: 20px 16px 24px;
+            padding: 16px 0;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -47,7 +47,7 @@
             bottom: -6px;
             left: 50%;
             transform: translateX(-50%);
-            width: 40px;
+            width: 60px;
             height: 3px;
             background: var(--cinnabar);
             border-radius: 2px;
@@ -56,23 +56,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
         }
         .app-title {
             font-family: 'ZCOOL XiaoWei', serif;
-            font-size: 26px;
-            letter-spacing: 4px;
+            font-size: 28px;
+            letter-spacing: 6px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         .header-actions { display: flex; gap: 12px; }
         .icon-btn {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             background: rgba(212, 168, 75, 0.15);
             border: 1px solid rgba(212, 168, 75, 0.3);
             color: var(--gold);
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -85,16 +84,40 @@
             transform: scale(1.1);
             box-shadow: 0 0 15px rgba(212, 168, 75, 0.4);
         }
+        .main-nav {
+            display: flex;
+            gap: 8px;
+        }
+        .nav-link {
+            padding: 10px 20px;
+            color: var(--gold-light);
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.3s;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+        .nav-link:hover {
+            background: rgba(212, 168, 75, 0.2);
+            color: var(--gold);
+        }
+        .nav-link.active {
+            background: var(--cinnabar);
+            color: white;
+        }
         .search-bar {
             background: rgba(253, 248, 240, 0.1);
             border: 1px solid rgba(212, 168, 75, 0.2);
-            border-radius: 20px;
-            padding: 12px 20px;
+            border-radius: 25px;
+            padding: 10px 20px;
             display: flex;
             align-items: center;
             gap: 12px;
             cursor: pointer;
             transition: all 0.3s;
+            max-width: 400px;
+            margin-top: 12px;
         }
         .search-bar:hover {
             background: rgba(253, 248, 240, 0.15);
@@ -110,7 +133,7 @@
             outline: none;
         }
         .search-bar input::placeholder { color: rgba(245, 230, 200, 0.6); }
-        .content { padding: 16px; }
+        .content { padding: 30px 0; }
         .page { display: none; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -118,39 +141,41 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin: 24px 0;
+            gap: 16px;
+            margin: 40px 0;
             color: var(--gold);
-            font-size: 12px;
+            font-size: 14px;
         }
         .chinese-divider::before, .chinese-divider::after {
             content: '';
             flex: 1;
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            max-width: 200px;
         }
-        .chinese-divider span { letter-spacing: 4px; }
+        .chinese-divider span { letter-spacing: 6px; }
         .section-title {
             font-family: 'ZCOOL XiaoWei', serif;
-            font-size: 20px;
+            font-size: 24px;
             color: var(--ink);
-            margin-bottom: 16px;
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            letter-spacing: 2px;
+            gap: 12px;
+            letter-spacing: 3px;
         }
         .section-title::before {
             content: '◆';
             color: var(--cinnabar);
-            font-size: 10px;
+            font-size: 12px;
         }
         .section-title::after {
             content: '';
             flex: 1;
             height: 1px;
             background: linear-gradient(90deg, var(--gold), transparent);
-            margin-left: 10px;
+            margin-left: 16px;
+            max-width: 100px;
         }
         .card {
             background: var(--ivory);
@@ -267,15 +292,14 @@
         }
         .province-tabs {
             display: flex;
-            gap: 8px;
-            overflow-x: auto;
+            flex-wrap: wrap;
+            gap: 10px;
             padding: 4px;
             margin-bottom: 20px;
-            -webkit-overflow-scrolling: touch;
         }
         .province-tabs::-webkit-scrollbar { display: none; }
         .province-tab {
-            padding: 10px 18px;
+            padding: 10px 20px;
             background: var(--ivory);
             border: 1px solid var(--paper-dark);
             border-radius: 20px;
@@ -296,19 +320,20 @@
         .province-tab.active:hover { transform: translateY(-2px); }
         .cities-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
         }
         .city-card {
             background: var(--ivory);
             border-radius: 16px;
-            padding: 20px 16px;
+            padding: 24px 20px;
             box-shadow: 0 6px 20px var(--shadow);
             cursor: pointer;
             transition: all 0.4s;
             position: relative;
             overflow: hidden;
             border: 1px solid transparent;
+            text-align: center;
         }
         .city-card::before {
             content: '';
@@ -330,41 +355,41 @@
             pointer-events: none;
         }
         .city-card:hover {
-            transform: translateY(-6px) scale(1.02);
+            transform: translateY(-8px);
             box-shadow: 0 16px 40px var(--shadow-lg);
             border-color: var(--gold);
         }
         .city-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
+            font-size: 52px;
+            margin-bottom: 14px;
             display: block;
             filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.15));
             transition: transform 0.3s;
         }
-        .city-card:hover .city-icon { transform: scale(1.1) rotate(-5deg); }
+        .city-card:hover .city-icon { transform: scale(1.1); }
         .city-name {
             font-family: 'ZCOOL XiaoWei', serif;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
             color: var(--ink);
             margin-bottom: 6px;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             position: relative;
             z-index: 1;
         }
         .city-province {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--jade);
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             font-weight: 600;
             letter-spacing: 1px;
         }
-        .city-tags { display: flex; flex-wrap: wrap; gap: 6px; position: relative; z-index: 1; }
+        .city-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; position: relative; z-index: 1; }
         .tag {
             padding: 5px 12px;
             background: linear-gradient(135deg, var(--paper) 0%, var(--paper-dark) 100%);
             border-radius: 15px;
-            font-size: 11px;
+            font-size: 12px;
             color: var(--ink-light);
             border: 1px solid var(--paper-dark);
             transition: all 0.3s;
@@ -379,19 +404,25 @@
             bottom: 0;
             background: rgba(44, 44, 44, 0.7);
             z-index: 200;
-            align-items: flex-end;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
             backdrop-filter: blur(4px);
         }
         .modal-overlay.show { display: flex; }
         .modal-content {
             background: var(--ivory);
             width: 100%;
-            max-height: 95vh;
+            max-width: 700px;
+            max-height: 90vh;
             overflow-y: auto;
-            border-radius: 24px 24px 0 0;
-            padding: 24px;
+            border-radius: 20px;
+            padding: 30px;
             animation: slideUp 0.4s ease;
             position: relative;
+            margin: auto;
+            top: 50%;
+            transform: translateY(-50%);
         }
         .modal-content::before {
             content: '';
@@ -616,6 +647,9 @@
             z-index: 1;
             box-shadow: 0 3px 10px rgba(212, 168, 75, 0.3);
         }
+        .profile-content {
+            padding: 0 20px 20px;
+        }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
         .stat-card {
             background: linear-gradient(135deg, var(--ivory) 0%, var(--paper) 100%);
@@ -634,83 +668,61 @@
         .stat-value { font-family: 'ZCOOL XiaoWei', serif; font-size: 28px; font-weight: 700; color: var(--cinnabar); }
         .stat-label { font-size: 12px; color: var(--ink-light); margin-top: 5px; letter-spacing: 1px; }
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(180deg, var(--ivory) 0%, var(--paper) 100%);
+            display: none;
+        }
+        .main-layout {
             display: flex;
-            justify-content: space-around;
-            padding: 12px 16px 24px;
-            box-shadow: 0 -6px 25px var(--shadow-lg);
-            z-index: 100;
-            border-top: 2px solid var(--gold);
+            gap: 40px;
+            margin-top: 30px;
         }
-        .bottom-nav::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--cinnabar), var(--gold), var(--cinnabar));
-            border-radius: 2px;
+        .main-content {
+            flex: 1;
+            min-width: 0;
         }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            background: none;
-            border: none;
-            color: var(--ink-light);
-            font-size: 11px;
-            cursor: pointer;
-            padding: 10px 18px;
-            border-radius: 18px;
-            transition: all 0.3s;
-            font-family: 'Noto Serif SC', serif;
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
         }
-        .nav-item.active { color: var(--cinnabar); }
-        .nav-item:hover { background: var(--gold-light); }
-        .nav-item.active:hover { background: rgba(199, 62, 58, 0.1); }
-        .nav-icon { font-size: 26px; transition: all 0.3s; }
-        .nav-item:hover .nav-icon { transform: scale(1.2); }
-        .nav-item.active .nav-icon { transform: scale(1.1); }
-        .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+        .sidebar-card {
+            background: var(--ivory);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 6px 20px var(--shadow);
+            border: 1px solid rgba(212, 168, 75, 0.2);
+            margin-bottom: 24px;
+        }
+        .sidebar-title {
+            font-family: 'ZCOOL XiaoWei', serif;
+            font-size: 18px;
+            color: var(--ink);
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--gold);
+            letter-spacing: 2px;
+        }
+        .quick-actions { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+        }
         .quick-action {
             background: linear-gradient(135deg, var(--ivory) 0%, var(--paper) 100%);
-            padding: 20px 10px;
-            border-radius: 14px;
+            padding: 20px 16px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 5px 15px var(--shadow);
+            box-shadow: 0 4px 12px var(--shadow);
             cursor: pointer;
             transition: all 0.4s;
             border: 1px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-        .quick-action::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--cinnabar), var(--gold));
-            opacity: 0;
-            transition: opacity 0.3s;
         }
         .quick-action:hover { 
-            transform: translateY(-5px); 
+            transform: translateY(-4px); 
             border-color: var(--gold);
-            box-shadow: 0 12px 30px var(--shadow-lg);
+            box-shadow: 0 8px 20px var(--shadow-lg);
         }
-        .quick-action:hover::before { opacity: 1; }
-        .quick-action-icon { font-size: 34px; margin-bottom: 10px; display: block; transition: transform 0.3s; }
-        .quick-action:hover .quick-action-icon { transform: scale(1.15) rotate(-5deg); }
-        .quick-action-text { font-size: 12px; color: var(--ink-light); letter-spacing: 1px; font-weight: 600; }
+        .quick-action-icon { font-size: 28px; margin-bottom: 8px; display: block; transition: transform 0.3s; }
+        .quick-action:hover .quick-action-icon { transform: scale(1.1); }
+        .quick-action-text { font-size: 13px; color: var(--ink-light); letter-spacing: 1px; font-weight: 600; }
         .loading { text-align: center; padding: 80px 20px; color: var(--ink-light); position: relative; }
         .loading::before {
             content: '◌';
@@ -780,14 +792,14 @@
         }
         .banner-title { 
             font-family: 'ZCOOL XiaoWei', serif; 
-            font-size: 24px; 
-            margin-bottom: 10px; 
-            letter-spacing: 5px; 
+            font-size: 30px; 
+            margin-bottom: 12px; 
+            letter-spacing: 6px; 
             position: relative;
             z-index: 1;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
-        .banner-text { font-size: 14px; opacity: 0.95; position: relative; z-index: 1; letter-spacing: 1px; }
+        .banner-text { font-size: 16px; opacity: 0.95; position: relative; z-index: 1; letter-spacing: 2px; }
         .post-input-card {
             background: linear-gradient(135deg, var(--ivory) 0%, var(--paper) 100%);
             border-radius: 16px;
@@ -878,25 +890,22 @@
     <div id="app">
         <div class="header">
             <div class="container">
-                <div class="header-top">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
                     <div class="app-title">🏔️ 山河旅图</div>
+                    <nav class="main-nav">
+                        <a class="nav-link active" onclick="showPage('home')">首页</a>
+                        <a class="nav-link" onclick="showPage('explore')">探索城市</a>
+                        <a class="nav-link" onclick="showPage('social')">旅行动态</a>
+                        <a class="nav-link" onclick="showPage('profile')">我的</a>
+                    </nav>
                     <div class="header-actions">
                         <button class="icon-btn" onclick="showPage('search')">🔍</button>
-                        <button class="icon-btn" onclick="showPage('profile')" id="userBtn">👤</button>
+                        <button class="icon-btn" onclick="showPage('profile')" id="userBtn">�</button>
                     </div>
-                </div>
-                <div class="search-bar" onclick="showPage('search')">
-                    <span>🔍</span>
-                    <input type="text" placeholder="寻觅山水之间..." readonly>
                 </div>
             </div>
         </div>
         <div id="content" class="container"></div>
-        <div class="bottom-nav">
-            <button class="nav-item active" onclick="showPage('home')"><span class="nav-icon">🏠</span><span>首页</span></button>
-            <button class="nav-item" onclick="showPage('explore')"><span class="nav-icon">🗺️</span><span>探索</span></button>
-            <button class="nav-item" onclick="showPage('social')"><span class="nav-icon">📜</span><span>动态</span></button>
-            <button class="nav-item" onclick="showPage('profile')"><span class="nav-icon">👤</span><span>我的</span></button>
         </div>
     </div>
     <script>
@@ -937,9 +946,12 @@
             setTimeout(() => toast.remove(), 3000);
         }
         function showPage(page) {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            const navIndex = { home: 1, explore: 2, social: 3, profile: 4 };
-            if (navIndex[page]) document.querySelector(`.nav-item:nth-child(${navIndex[page]})`).classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+            const pageToNav = { home: 0, explore: 1, social: 2, profile: 3 };
+            if (pageToNav[page] !== undefined) {
+                const navLinks = document.querySelectorAll('.nav-link');
+                if (navLinks[pageToNav[page]]) navLinks[pageToNav[page]].classList.add('active');
+            }
             if (!authToken && page === 'profile') { showAuth(); return; }
             const pages = { home: loadHomePage, explore: loadExplorePage, social: loadSocialPage, profile: loadProfilePage, search: loadSearchPage };
             if (pages[page]) pages[page]();
@@ -991,21 +1003,35 @@
         function logout() { authToken = null; currentUser = null; localStorage.removeItem('token'); showToast('已退出登录'); init(); }
         function loadHomePage() {
             document.getElementById('content').innerHTML = `
-                <div class="page active" style="padding:16px;">
-                    <div class="banner"><div class="banner-title">✦ 山水相逢 · 旅途有你 ✦</div><div class="banner-text">探索中华大地，发现最美风景</div></div>
-                    <div class="section-title">快捷功能</div>
-                    <div class="quick-actions">
-                        <div class="quick-action" onclick="showPage('explore')"><span class="quick-action-icon">🗺️</span><span class="quick-action-text">探索城市</span></div>
-                        <div class="quick-action" onclick="showPage('social')"><span class="quick-action-icon">📜</span><span class="quick-action-text">旅行动态</span></div>
-                        <div class="quick-action" onclick="showPage('profile')"><span class="quick-action-icon">📋</span><span class="quick-action-text">我的计划</span></div>
-                        <div class="quick-action" onclick="showPage('search')"><span class="quick-action-icon">🔍</span><span class="quick-action-text">搜索</span></div>
+                <div class="page active">
+                    <div class="banner" style="border-radius:20px;margin-bottom:40px;"><div class="banner-title">✦ 山水相逢 · 旅途有你 ✦</div><div class="banner-text">探索中华大地，发现最美风景</div></div>
+                    <div class="main-layout">
+                        <div class="main-content">
+                            <div class="section-title">🌟 热门目的地</div>
+                            <div class="cities-grid">${cities.slice(0, 8).map(c => `<div class="city-card" onclick="showCityDetail(${c.id})"><span class="city-icon">${getCityIcon(c.name)}</span><div class="city-name">${c.name}</div><div class="city-province">${c.province_name}</div><div class="city-tags">${c.highlights.split(',').slice(0, 2).map(h => `<span class="tag">${h}</span>`).join('')}</div></div>`).join('')}</div>
+                        </div>
+                        <div class="sidebar">
+                            <div class="sidebar-card">
+                                <div class="sidebar-title">📌 快捷入口</div>
+                                <div class="quick-actions">
+                                    <div class="quick-action" onclick="showPage('explore')"><span class="quick-action-icon">🗺️</span><span class="quick-action-text">探索城市</span></div>
+                                    <div class="quick-action" onclick="showPage('social')"><span class="quick-action-icon">📜</span><span class="quick-action-text">旅行动态</span></div>
+                                    <div class="quick-action" onclick="showPage('profile')"><span class="quick-action-icon">📋</span><span class="quick-action-text">我的计划</span></div>
+                                    <div class="quick-action" onclick="showPage('search')"><span class="quick-action-icon">🔍</span><span class="quick-action-text">搜索</span></div>
+                                </div>
+                            </div>
+                            <div class="sidebar-card">
+                                <div class="sidebar-title">🍜 美食推荐</div>
+                                <div style="font-size:14px;color:var(--ink-light);line-height:1.8;">
+                                    <div style="margin-bottom:10px;padding:8px 0;border-bottom:1px dashed var(--paper-dark);">🏯 西安 · 肉夹馍、凉皮、泡馍</div>
+                                    <div style="margin-bottom:10px;padding:8px 0;border-bottom:1px dashed var(--paper-dark);">🐼 成都 · 火锅、串串、冒菜</div>
+                                    <div style="margin-bottom:10px;padding:8px 0;border-bottom:1px dashed var(--paper-dark);">🏜️ 敦煌 · 驴肉黄面、杏皮水</div>
+                                    <div style="padding:8px 0;">🏛️ 洛阳 · 洛阳水席、牛肉汤</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="chinese-divider"><span>◆ 热门城市 ◆</span></div>
-                    <div class="cities-grid">${cities.slice(0, 4).map(c => `<div class="city-card" onclick="showCityDetail(${c.id})"><span class="city-icon">${getCityIcon(c.name)}</span><div class="city-name">${c.name}</div><div class="city-province">${c.province_name}</div><div class="city-tags">${c.highlights.split(',').slice(0, 2).map(h => `<span class="tag">${h}</span>`).join('')}</div></div>`).join('')}</div>
-                    <div class="chinese-divider"><span>◆ 最新动态 ◆</span></div>
-                    <div id="latestPosts" style="display:none;"></div>
                 </div>`;
-            loadLatestPosts();
         }
         async function loadLatestPosts() {
             const res = await api('/posts?limit=3');
@@ -1017,7 +1043,7 @@
         function formatTime(dateStr) { if (!dateStr) return ''; const date = new Date(dateStr); const now = new Date(); const diff = now - date; if (diff < 60000) return '刚刚'; if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前'; if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前'; if (diff < 604800000) return Math.floor(diff / 86400000) + '天前'; return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' }); }
         function loadExplorePage(provinceFilter = null) {
             const filteredCities = provinceFilter ? cities.filter(c => c.province_name === provinceFilter) : cities;
-            document.getElementById('content').innerHTML = `<div class="page active" style="padding:16px;"><div class="section-title">🗺️ 城市探索</div><div class="province-tabs"><button class="province-tab ${!provinceFilter ? 'active' : ''}" onclick="loadExplorePage(null)">全部</button><button class="province-tab ${provinceFilter === '陕西' ? 'active' : ''}" onclick="loadExplorePage('陕西')">陕西</button><button class="province-tab ${provinceFilter === '甘肃' ? 'active' : ''}" onclick="loadExplorePage('甘肃')">甘肃</button><button class="province-tab ${provinceFilter === '宁夏' ? 'active' : ''}" onclick="loadExplorePage('宁夏')">宁夏</button><button class="province-tab ${provinceFilter === '山西' ? 'active' : ''}" onclick="loadExplorePage('山西')">山西</button><button class="province-tab ${provinceFilter === '河南' ? 'active' : ''}" onclick="loadExplorePage('河南')">河南</button><button class="province-tab ${provinceFilter === '湖北' ? 'active' : ''}" onclick="loadExplorePage('湖北')">湖北</button><button class="province-tab ${provinceFilter === '四川' ? 'active' : ''}" onclick="loadExplorePage('四川')">四川</button></div><div class="cities-grid">${filteredCities.map(c => `<div class="city-card" onclick="showCityDetail(${c.id})"><span class="city-icon">${getCityIcon(c.name)}</span><div class="city-name">${c.name}</div><div class="city-province">${c.province_name}</div><div class="city-tags">${c.highlights.split(',').slice(0, 2).map(h => `<span class="tag">${h}</span>`).join('')}</div></div>`).join('')}</div></div>`;
+            document.getElementById('content').innerHTML = `<div class="page active"><div class="section-title">🗺️ 城市探索</div><div class="province-tabs"><button class="province-tab ${!provinceFilter ? 'active' : ''}" onclick="loadExplorePage(null)">全部</button><button class="province-tab ${provinceFilter === '陕西' ? 'active' : ''}" onclick="loadExplorePage('陕西')">陕西</button><button class="province-tab ${provinceFilter === '甘肃' ? 'active' : ''}" onclick="loadExplorePage('甘肃')">甘肃</button><button class="province-tab ${provinceFilter === '宁夏' ? 'active' : ''}" onclick="loadExplorePage('宁夏')">宁夏</button><button class="province-tab ${provinceFilter === '山西' ? 'active' : ''}" onclick="loadExplorePage('山西')">山西</button><button class="province-tab ${provinceFilter === '河南' ? 'active' : ''}" onclick="loadExplorePage('河南')">河南</button><button class="province-tab ${provinceFilter === '湖北' ? 'active' : ''}" onclick="loadExplorePage('湖北')">湖北</button><button class="province-tab ${provinceFilter === '四川' ? 'active' : ''}" onclick="loadExplorePage('四川')">四川</button></div><div class="cities-grid" style="margin-top:20px;">${filteredCities.map(c => `<div class="city-card" onclick="showCityDetail(${c.id})"><span class="city-icon">${getCityIcon(c.name)}</span><div class="city-name">${c.name}</div><div class="city-province">${c.province_name}</div><div class="city-tags">${c.highlights.split(',').slice(0, 2).map(h => `<span class="tag">${h}</span>`).join('')}</div></div>`).join('')}</div></div>`;
         }
         function showCityDetail(cityId) {
             const city = cities.find(c => c.id === cityId);
@@ -1087,7 +1113,7 @@
             document.getElementById('content').innerHTML = '<div class="loading">加载中...</div>';
             const res = await api('/posts');
             const posts = res || [];
-            document.getElementById('content').innerHTML = `<div class="page active" style="padding:16px;"><div class="section-title">📜 旅行动态</div><div class="post-input-card" onclick="showCreatePost()"><div class="avatar">${currentUser?.avatar || '🧳'}</div><div class="post-input-placeholder">分享你的旅途故事...</div></div>${posts.length > 0 ? posts.map(p => `<div class="post-card" data-post-id="${p.id}"><div class="post-header"><div class="avatar">${p.avatar || '🧳'}</div><div class="user-info"><div class="user-name">${p.nickname || '匿名旅人'}</div><div class="user-bio">${formatTime(p.created_at)}</div></div></div><div class="post-content">${p.content}</div><div class="post-actions"><button class="action-btn" onclick="toggleLike('${p.id}', this)">🤍 ${p.likes_count || 0}</button><button class="action-btn" onclick="showComments('${p.id}')">💬 ${p.comments_count || 0}</button><button class="action-btn" onclick="sharePost('${p.nickname}')">🔗 分享</button></div></div>`).join('') : `<div class="empty-state"><span class="empty-icon">📜</span><div class="empty-text">暂无动态，快来发布第一条吧！</div></div>`}</div>`;
+            document.getElementById('content').innerHTML = `<div class="page active"><div class="section-title">📜 旅行动态</div><div class="post-input-card" onclick="showCreatePost()"><div class="avatar">${currentUser?.avatar || '🧳'}</div><div class="post-input-placeholder">分享你的旅途故事...</div></div>${posts.length > 0 ? posts.map(p => `<div class="post-card" data-post-id="${p.id}"><div class="post-header"><div class="avatar">${p.avatar || '🧳'}</div><div class="user-info"><div class="user-name">${p.nickname || '匿名旅人'}</div><div class="user-bio">${formatTime(p.created_at)}</div></div></div><div class="post-content">${p.content}</div><div class="post-actions"><button class="action-btn" onclick="toggleLike('${p.id}', this)">🤍 ${p.likes_count || 0}</button><button class="action-btn" onclick="showComments('${p.id}')">💬 ${p.comments_count || 0}</button><button class="action-btn" onclick="sharePost('${p.nickname}')">🔗 分享</button></div></div>`).join('') : `<div class="empty-state"><span class="empty-icon">📜</span><div class="empty-text">暂无动态，快来发布第一条吧！</div></div>`}</div>`;
         }
         function showCreatePost() {
             const modal = document.createElement('div');
@@ -1122,7 +1148,7 @@
         function sharePost(nickname) { const text = `${nickname}的旅行分享 - 山河旅图`; if (navigator.share) { navigator.share({ title: '山河旅图', text }); } else { navigator.clipboard.writeText(text); showToast('已复制到剪贴板'); } }
         function loadProfilePage() {
             if (!currentUser) { showAuth('login'); return; }
-            document.getElementById('content').innerHTML = `<div class="page active"><div class="profile-header"><div class="profile-avatar" onclick="showAvatarPicker()">${currentUser.avatar || '🧳'}</div><div class="profile-name">${currentUser.nickname || '旅人'}</div><div class="profile-level">Lv.${currentUser.level || 1}</div></div><div style="padding:0 16px 16px;"><div class="section-title" style="margin-top:20px;">✏️ 个人信息</div><div class="card" style="margin-bottom:16px;"><div class="info-item"><span class="info-label">昵称</span><input type="text" id="profileNickname" value="${currentUser.nickname || ''}" class="info-input" placeholder="设置昵称"></div><div class="info-item"><span class="info-label">签名</span><input type="text" id="profileBio" value="${currentUser.bio || ''}" class="info-input" placeholder="添加签名..."></div></div><button class="btn btn-secondary" onclick="saveProfile()" style="margin-bottom:16px;">保存修改</button><div class="stats-grid"><div class="stat-card"><div class="stat-value">${currentUser.experience || 0}</div><div class="stat-label">经验值</div></div><div class="stat-card"><div class="stat-value">${currentUser.posts_count || 0}</div><div class="stat-label">发布动态</div></div><div class="stat-card"><div class="stat-value">${currentUser.followers_count || 0}</div><div class="stat-label">粉丝</div></div></div><div class="section-title">📋 我的旅行计划</div><div id="myPlans">${loadMyPlans()}</div><button class="btn" onclick="logout()" style="margin-top:30px;background:linear-gradient(135deg, #666 0%, #444 100%);">退 出 登 录</button></div></div>`;
+            document.getElementById('content').innerHTML = `<div class="page active"><div class="profile-header"><div class="profile-avatar" onclick="showAvatarPicker()">${currentUser.avatar || '🧳'}</div><div class="profile-name">${currentUser.nickname || '旅人'}</div><div class="profile-level">Lv.${currentUser.level || 1}</div></div><div class="profile-content"><div class="section-title" style="margin-top:20px;">✏️ 个人信息</div><div class="card" style="margin-bottom:16px;"><div class="info-item"><span class="info-label">昵称</span><input type="text" id="profileNickname" value="${currentUser.nickname || ''}" class="info-input" placeholder="设置昵称"></div><div class="info-item"><span class="info-label">签名</span><input type="text" id="profileBio" value="${currentUser.bio || ''}" class="info-input" placeholder="添加签名..."></div></div><button class="btn btn-secondary" onclick="saveProfile()" style="margin-bottom:16px;">保存修改</button><div class="stats-grid"><div class="stat-card"><div class="stat-value">${currentUser.experience || 0}</div><div class="stat-label">经验值</div></div><div class="stat-card"><div class="stat-value">${currentUser.posts_count || 0}</div><div class="stat-label">发布动态</div></div><div class="stat-card"><div class="stat-value">${currentUser.followers_count || 0}</div><div class="stat-label">粉丝</div></div></div><div class="section-title">📋 我的旅行计划</div><div id="myPlans">${loadMyPlans()}</div><button class="btn" onclick="logout()" style="margin-top:30px;background:linear-gradient(135deg, #666 0%, #444 100%);">退 出 登 录</button></div></div>`;
         }
         function loadMyPlans() { 
             const plans = JSON.parse(localStorage.getItem('travelPlans') || '[]'); 
@@ -1134,7 +1160,7 @@
         function showAvatarPicker() { const avatars = ['🧳', '👨‍✈️', '👩‍✈️', '🧑‍🚀', '👨‍🌾', '👩‍🌾', '🧔', '👩‍🦰', '👨‍🦳', '👩‍🦳', '👨‍💼', '👩‍💼', '🎒', '🏃', '🚶', '🧗', '🏕️', '🎣', '📸', '🗺️']; const modal = document.createElement('div'); modal.className = 'modal-overlay show'; modal.innerHTML = `<div class="modal-content"><div class="modal-header"><div class="modal-title">选择头像</div><button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button></div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;padding:10px;">${avatars.map(a => `<div class="avatar" style="cursor:pointer;font-size:32px;margin:0;" onclick="selectAvatar('${a}')">${a}</div>`).join('')}</div></div>`; document.body.appendChild(modal); }
         async function selectAvatar(avatar) { document.querySelector('.modal-overlay.show')?.remove(); const res = await api('/user/profile', { method: 'PUT', body: JSON.stringify({ avatar }) }); if (res && res.success) { currentUser.avatar = avatar; showToast('头像已更新'); loadProfilePage(); } }
         async function saveProfile() { const nickname = document.getElementById('profileNickname').value.trim(); const bio = document.getElementById('profileBio').value.trim(); const res = await api('/user/profile', { method: 'PUT', body: JSON.stringify({ nickname, bio }) }); if (res && res.success) { currentUser.nickname = nickname; currentUser.bio = bio; showToast('保存成功'); } }
-        function loadSearchPage() { document.getElementById('content').innerHTML = `<div class="page active" style="padding:16px;"><div class="section-title">🔍 搜索</div><div class="card" style="margin-bottom:16px;"><input type="text" class="form-input" id="searchInput" placeholder="搜索城市、攻略..." oninput="handleSearch(this.value)"></div><div id="searchResults"></div></div>`; document.getElementById('searchInput').focus(); }
+        function loadSearchPage() { document.getElementById('content').innerHTML = `<div class="page active"><div class="section-title">🔍 搜索</div><div class="card" style="margin-bottom:20px;"><input type="text" class="form-input" id="searchInput" placeholder="搜索城市、攻略..." oninput="handleSearch(this.value)" style="font-size:16px;"></div><div id="searchResults"></div></div>`; document.getElementById('searchInput').focus(); }
         function handleSearch(query) { if (!query || query.length < 1) { document.getElementById('searchResults').innerHTML = ''; return; } const results = cities.filter(c => c.name.includes(query) || c.province_name.includes(query) || c.highlights.includes(query)); document.getElementById('searchResults').innerHTML = results.length > 0 ? `<div class="cities-grid">${results.map(c => `<div class="city-card" onclick="showCityDetail(${c.id})"><span class="city-icon">${getCityIcon(c.name)}</span><div class="city-name">${c.name}</div><div class="city-province">${c.province_name}</div></div>`).join('')}</div>` : '<div class="empty-state"><span class="empty-icon">🔍</span><div class="empty-text">未找到相关城市</div></div>'; }
         init();
     </script>
